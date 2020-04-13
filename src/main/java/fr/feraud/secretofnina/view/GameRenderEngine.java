@@ -1,0 +1,99 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package fr.feraud.secretofnina.view;
+
+import fr.feraud.secretofnina.ApplicationParameters;
+import fr.feraud.secretofnina.control.PlayerEventHandler;
+import fr.feraud.secretofnina.model.Sprite;
+import java.util.List;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+
+/**
+ *
+ * @author eric
+ */
+public class GameRenderEngine {
+
+    private final Pane root;
+
+    private final List<Sprite> players; //@TODO il faut le niveau en fait
+
+    public GameRenderEngine(Stage stage, ApplicationParameters applicationParameters, List<Sprite> players) {
+        root = new StackPane();
+        root.setBackground(Background.EMPTY);
+        //one container of Nodes that compose one “page” of your application
+        Scene theScene = new Scene(root, Color.BLACK);
+        stage.setScene(theScene);
+        stage.setTitle("SecretOfNina " + applicationParameters.getWidth() + "X" + applicationParameters.getHeight());
+        //stage.initStyle(javafx.stage.StageStyle.TRANSPARENT); @TODO à activer à la fin
+
+        Canvas canvas = new Canvas(applicationParameters.getWidth(), applicationParameters.getHeight());
+        root.getChildren().add(canvas);
+        root.setFocusTraversable(true);
+        root.requestFocus();
+        this.players = players;
+    }
+
+    /**
+     *
+     * @param time Le temps en milliseconde depuis le dernier appel
+     */
+    public void render(double time) {
+        Canvas canvas = (Canvas) root.getChildren().get(0);
+        GraphicsContext context = canvas.getGraphicsContext2D();
+
+        context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        /*
+        //@param sx the source rectangle's X coordinate position.
+        double sx = spriteX;//viewPort.getMinX();
+        //@param sy the source rectangle's Y coordinate position.
+        double sy = spriteY; //viewPort.getMinY();
+        //@param sw the source rectangle's width.
+        double sw = viewPort.getWidth();
+        //@param sh the source rectangle's height.
+        double sh = viewPort.getHeight();
+        //@param dx the destination rectangle's X coordinate position.
+        double dx = super.getPositionX();
+        //@param dy the destination rectangle's Y coordinate position.
+        double dy = super.getPositionY();
+        //@param dw the destination rectangle's width.
+        double dw = viewPort.getWidth();
+        if (direction == DirectionEnum.LEFT) {
+        dw = -dw;
+        dx = dx - dw;
+        }
+        //@param dh the destination rectangle's height.
+        double dh = viewPort.getHeight();*/
+        //super.getImageView().setViewport(new Rectangle2D(sx, sy, viewPort.getWidth(), viewPort.getHeight()));
+        players.forEach((player) -> {
+            render(player, time);
+        });
+
+    }
+
+    private void render(Sprite player, double time) {
+        player.update(time);
+        player.getRenderedClass().render(player, getGraphicsContext()); //@TODO stocker et instancier dans une MAP<class,renderer>
+    }
+
+    public GraphicsContext getGraphicsContext() {
+        Canvas canvas = (Canvas) root.getChildren().get(0);
+        return canvas.getGraphicsContext2D();
+    }
+
+    public void attachHandler(PlayerEventHandler playerEventHandler) {
+        root.setOnKeyPressed(playerEventHandler);
+        root.setOnKeyReleased(playerEventHandler);
+    }
+}
