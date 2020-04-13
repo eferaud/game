@@ -32,7 +32,7 @@ public abstract class Sprite {
 
     private DirectionEnum direction = DirectionEnum.DOWN;
     private MovementTypeEnum movementType = MovementTypeEnum.STOPED;
-    //MAJ uniquement dans la méthode move
+    //MAJ uniquement dans la méthode render
     private int loopCounter = 0;
 
     public Sprite(int width, int height, int lifeIndex) {
@@ -103,6 +103,10 @@ public abstract class Sprite {
         return loopCounter;
     }
 
+    public void setLoopCounter(int loopCounter) {
+        this.loopCounter = loopCounter;
+    }
+
     @Deprecated
     public Rectangle2D getBoundary() {
         return new Rectangle2D(this.positionX, this.positionY, this.width, this.height);
@@ -141,12 +145,6 @@ public abstract class Sprite {
 
     public void move(DirectionEnum direction, MovementTypeEnum movementType) {
         //System.out.println("move : " + movementType + " " + direction);
-
-        if (movementType.equals(MovementTypeEnum.STOPED) && (this.direction != direction || this.movementType != movementType)) {
-            loopCounter = 0;
-        } else {
-            loopCounter++;
-        }
         this.direction = direction;
         this.movementType = movementType;
 

@@ -27,9 +27,14 @@ public abstract class DefaultSpriteRenderer<T extends Sprite> {
     private final static int FRAME_RATE = 6;
 
     public void render(Sprite player, GraphicsContext graphicsContext) {
-
-        int imageNumber;
         int nbrImage = getMAP().get(player.getDirection()).size();
+        if (player.getLoopCounter() == (FRAME_RATE * nbrImage)) {
+            player.setLoopCounter(1);
+        }
+
+        int imageNumber = player.getLoopCounter() / FRAME_RATE;
+
+        Image image = getMAP().get(player.getDirection()).get(imageNumber);
 
         //@param dx the destination rectangle's X coordinate position.
         double dx = player.getPositionX();
@@ -40,65 +45,22 @@ public abstract class DefaultSpriteRenderer<T extends Sprite> {
         //@param dw the destination rectangle's width.
         double dw = player.getWidth();
 
-        int mod = player.getLoopCounter() % (FRAME_RATE * nbrImage);
-
-        if (!player.isCurrentlyMoving()) {
-            imageNumber = 1;
-        } else {
-            imageNumber = 1;
-            /*if (mod < FRAME_RATE) {
-                imageNumber = 2;
-            } else if (mod < FRAME_RATE * 2) {
-                imageNumber = 3;
-            } else if (mod < FRAME_RATE * 3) {
-                imageNumber = 4;
-            } else if (mod < FRAME_RATE * 4) {
-                imageNumber = 5;
-            } else if (mod < FRAME_RATE * 5) {
-                imageNumber = 6;
-            } else if (mod < FRAME_RATE * 6) {
-                imageNumber = 7;
-            } else {
-                imageNumber = 1;
-            }*/
-
- /*
-LoopCounter : 1 /  imageNumber=2 [MOD 1 % 18]
-LoopCounter : 2 /  imageNumber=2
-LoopCounter : 3 /  imageNumber=2
-LoopCounter : 4 /  imageNumber=2
-LoopCounter : 5 /  imageNumber=2
-LoopCounter : 6 /  imageNumber=4
-             */
-            int currentFrameRate = FRAME_RATE;
-            for (int i = 1; i <= nbrImage; i++) {
-                if (mod <= currentFrameRate) {
-                    imageNumber = i;
-                    break;
-                } else {
-                    currentFrameRate = FRAME_RATE * (i + 1);
-                }
-            }
-            System.out.println("LoopCounter : " + player.getLoopCounter() + " /  imageNumber=" + imageNumber);
-        }
-
         //@param dh the destination rectangle's height.
         double dh = player.getHeight();
 
-        Image image = getMAP().get(player.getDirection()).get(imageNumber - 1);
         switch (player.getDirection()) {
-            case RIGHT:
-                break;
             case LEFT:
                 dw = -dw;
                 dx = dx - dw;
                 break;
-            case UP:
-                break;
-            case DOWN:
-                break;
         }
         graphicsContext.drawImage(image, 0, 0, player.getWidth(), player.getHeight(), dx, dy, dw, dh);
+
+        if (player.isCurrentlyMoving()) {
+            player.setLoopCounter(player.getLoopCounter() + 1);
+        } else {
+            player.setLoopCounter(0);
+        }
     }
 
     protected static Image buildImageWithTransparency(String spriteSheetPath) {
