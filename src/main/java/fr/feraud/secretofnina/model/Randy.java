@@ -5,9 +5,6 @@
  */
 package fr.feraud.secretofnina.model;
 
-import fr.feraud.secretofnina.view.DefaultSpriteRenderer;
-import fr.feraud.secretofnina.view.RandyRenderer;
-
 /**
  *
  * @author eric
@@ -23,8 +20,4 @@ public class Randy extends Sprite {
         super.setPosition(x, y);
     }
 
-    @Override
-    public DefaultSpriteRenderer<? extends Sprite> getRenderedClass() {
-        return new RandyRenderer();
-    }
 }

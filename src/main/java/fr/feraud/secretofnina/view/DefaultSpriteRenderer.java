@@ -17,6 +17,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
 /**
+ * Les Renderer sont stateless
  *
  * @author eric
  * @param <T>
@@ -61,6 +62,14 @@ public abstract class DefaultSpriteRenderer<T extends Sprite> {
                 imageNumber = 1;
             }*/
 
+ /*
+LoopCounter : 1 /  imageNumber=2 [MOD 1 % 18]
+LoopCounter : 2 /  imageNumber=2
+LoopCounter : 3 /  imageNumber=2
+LoopCounter : 4 /  imageNumber=2
+LoopCounter : 5 /  imageNumber=2
+LoopCounter : 6 /  imageNumber=4
+             */
             int currentFrameRate = FRAME_RATE;
             for (int i = 1; i <= nbrImage; i++) {
                 if (mod <= currentFrameRate) {

@@ -7,8 +7,12 @@ package fr.feraud.secretofnina.view;
 
 import fr.feraud.secretofnina.ApplicationParameters;
 import fr.feraud.secretofnina.control.PlayerEventHandler;
+import fr.feraud.secretofnina.model.Lapin;
+import fr.feraud.secretofnina.model.Randy;
 import fr.feraud.secretofnina.model.Sprite;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -27,6 +31,12 @@ public class GameRenderEngine {
     private final Pane root;
 
     private final List<Sprite> players; //@TODO il faut le niveau en fait
+    private final static Map<Class, DefaultSpriteRenderer> MAP_RENDERER = new HashMap<>();
+
+    static {
+        MAP_RENDERER.put(Lapin.class, new LapinRenderer());
+        MAP_RENDERER.put(Randy.class, new RandyRenderer());
+    }
 
     public GameRenderEngine(Stage stage, ApplicationParameters applicationParameters, List<Sprite> players) {
         root = new StackPane();
@@ -84,7 +94,8 @@ public class GameRenderEngine {
 
     private void render(Sprite player, double time) {
         player.update(time);
-        player.getRenderedClass().render(player, getGraphicsContext()); //@TODO stocker et instancier dans une MAP<class,renderer>
+
+        MAP_RENDERER.get(player.getClass()).render(player, getGraphicsContext());
     }
 
     public GraphicsContext getGraphicsContext() {

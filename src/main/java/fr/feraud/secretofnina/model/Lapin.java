@@ -5,9 +5,6 @@
  */
 package fr.feraud.secretofnina.model;
 
-import fr.feraud.secretofnina.view.DefaultSpriteRenderer;
-import fr.feraud.secretofnina.view.LapinRenderer;
-
 /**
  *
  * @author eric
@@ -48,8 +45,4 @@ public class Lapin extends Sprite {
         }
         return new Rectangle2D(x, y, width, height);
     }*/
-    @Override
-    public DefaultSpriteRenderer<? extends Sprite> getRenderedClass() {
-        return new LapinRenderer();
-    }
 }

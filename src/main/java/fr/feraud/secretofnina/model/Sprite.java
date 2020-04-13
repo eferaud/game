@@ -6,7 +6,6 @@
 package fr.feraud.secretofnina.model;
 
 import fr.feraud.secretofnina.DirectionEnum;
-import fr.feraud.secretofnina.view.DefaultSpriteRenderer;
 import javafx.geometry.Rectangle2D;
 
 /**
@@ -192,6 +191,4 @@ public abstract class Sprite {
         }
         //System.out.println("loopCounter = " + loopCounter);
     }
-
-    public abstract DefaultSpriteRenderer<? extends Sprite> getRenderedClass();
 }
