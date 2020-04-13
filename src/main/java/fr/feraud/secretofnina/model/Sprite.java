@@ -5,7 +5,6 @@
  */
 package fr.feraud.secretofnina.model;
 
-import fr.feraud.secretofnina.DirectionEnum;
 import javafx.geometry.Rectangle2D;
 
 /**
@@ -15,7 +14,7 @@ import javafx.geometry.Rectangle2D;
  */
 public abstract class Sprite {
 
-    private final static double VELOCITY = 0.05d;
+    private final static double VELOCITY = 0.08d;
 
     private int positionX;
     private int positionY;

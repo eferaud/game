@@ -5,6 +5,7 @@
  */
 package fr.feraud.secretofnina;
 
+import fr.feraud.secretofnina.control.GameIAEngine;
 import fr.feraud.secretofnina.view.GameRenderEngine;
 import javafx.animation.AnimationTimer;
 import javafx.util.Duration;
@@ -15,12 +16,14 @@ import javafx.util.Duration;
  */
 public class GamePlayLoop extends AnimationTimer {
 
-    private GameRenderEngine gameRenderEngine;
+    private final GameRenderEngine gameRenderEngine;
     private long previousNow = 0l;
     private final static int FRAME_RATE = 60;
+    private final GameIAEngine gameIAEngine;
 
-    GamePlayLoop(GameRenderEngine gameRenderEngine) {
+    GamePlayLoop(GameRenderEngine gameRenderEngine, GameIAEngine gameIAEngine) {
         this.gameRenderEngine = gameRenderEngine;
+        this.gameIAEngine = gameIAEngine;
     }
 
     @Override
@@ -34,6 +37,7 @@ public class GamePlayLoop extends AnimationTimer {
         double time = d1.subtract(d2).toMillis();
 
         if (time > (1000 / FRAME_RATE)) {
+            this.gameIAEngine.play(time);
             gameRenderEngine.render(time);
             previousNow = now;
         }

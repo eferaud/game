@@ -1,5 +1,6 @@
 package fr.feraud.secretofnina;
 
+import fr.feraud.secretofnina.control.GameIAEngine;
 import fr.feraud.secretofnina.control.PlayerEventHandler;
 import fr.feraud.secretofnina.model.Lapin;
 import fr.feraud.secretofnina.model.Randy;
@@ -26,14 +27,18 @@ public class App extends Application {
         ApplicationParameters applicationParameters = new ApplicationParameters();
 
         players.add(new Randy(100, 180));
-        players.add(new Lapin(200, 280));
+        for (int i = 0; i < 1000; i++) {
+            players.add(new Lapin(200, 280));
+        }
 
         GameRenderEngine gameRenderEngine = new GameRenderEngine(stage, applicationParameters, players);
         gameRenderEngine.attachHandler(new PlayerEventHandler(players.get(0)));
 
+        GameIAEngine gameIAEngine = new GameIAEngine(players);
+
         stage.show();
 
-        GamePlayLoop gamePlayLoop = new GamePlayLoop(gameRenderEngine);
+        GamePlayLoop gamePlayLoop = new GamePlayLoop(gameRenderEngine, gameIAEngine);
         gamePlayLoop.start();
 
     }

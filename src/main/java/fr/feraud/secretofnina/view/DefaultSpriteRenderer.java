@@ -5,7 +5,7 @@
  */
 package fr.feraud.secretofnina.view;
 
-import fr.feraud.secretofnina.DirectionEnum;
+import fr.feraud.secretofnina.model.DirectionEnum;
 import fr.feraud.secretofnina.model.Sprite;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +30,8 @@ public abstract class DefaultSpriteRenderer<T extends Sprite> {
         int nbrImage = getMAP().get(player.getDirection()).size();
         if (player.getLoopCounter() == (FRAME_RATE * nbrImage)) {
             player.setLoopCounter(1);
+        } else if ((player.getLoopCounter() < FRAME_RATE) && player.isCurrentlyMoving()) { //éviter l'effet de glissement
+            player.setLoopCounter(FRAME_RATE);
         }
 
         int imageNumber = player.getLoopCounter() / FRAME_RATE;

@@ -5,8 +5,6 @@
  */
 package fr.feraud.secretofnina.model;
 
-import fr.feraud.secretofnina.DirectionEnum;
-
 /**
  *
  * @author eric

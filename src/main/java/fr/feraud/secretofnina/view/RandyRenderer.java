@@ -5,11 +5,11 @@
  */
 package fr.feraud.secretofnina.view;
 
-import fr.feraud.secretofnina.DirectionEnum;
-import static fr.feraud.secretofnina.DirectionEnum.DOWN;
-import static fr.feraud.secretofnina.DirectionEnum.LEFT;
-import static fr.feraud.secretofnina.DirectionEnum.RIGHT;
-import static fr.feraud.secretofnina.DirectionEnum.UP;
+import fr.feraud.secretofnina.model.DirectionEnum;
+import static fr.feraud.secretofnina.model.DirectionEnum.DOWN;
+import static fr.feraud.secretofnina.model.DirectionEnum.LEFT;
+import static fr.feraud.secretofnina.model.DirectionEnum.RIGHT;
+import static fr.feraud.secretofnina.model.DirectionEnum.UP;
 import fr.feraud.secretofnina.model.Randy;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,29 +23,46 @@ import javafx.scene.image.Image;
  */
 public class RandyRenderer extends DefaultSpriteRenderer<Randy> {
 
-    private final static Image I1 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy1.png");
-    private final static Image I2 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy2.png");
-    private final static Image I3 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy3.png");
-    private final static Image I4 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy4.png");
-    private final static Image I5 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy5.png");
-    private final static Image I6 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy6.png");
-    private final static Image I7 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy7.png");
+    private final static Image R1 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy1.png");
+    private final static Image R2 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy2.png");
+    private final static Image R3 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy3.png");
+    private final static Image R4 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy4.png");
+    private final static Image R5 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy5.png");
+    private final static Image R6 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy6.png");
+    private final static Image R7 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy7.png");
+
+    private final static Image D1 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy_D0.png");
+    private final static Image D2 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy_D1.png");
+    private final static Image D3 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy_D2.png");
+    private final static Image D4 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy_D3.png");
+    private final static Image D5 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy_D4.png");
+    private final static Image D6 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy_D5.png");
+    private final static Image D7 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy_D6.png");
 
     private final static Map<DirectionEnum, List<Image>> MAP = new HashMap<>();
 
     static {
         List<Image> animList = new ArrayList<>();
-        animList.add(I1);
-        animList.add(I2);
-        animList.add(I3);
-        animList.add(I4);
-        animList.add(I5);
-        animList.add(I6);
-        animList.add(I7);
+        animList.add(R1);
+        animList.add(R2);
+        animList.add(R3);
+        animList.add(R4);
+        animList.add(R5);
+        animList.add(R6);
+        animList.add(R7);
         MAP.put(RIGHT, animList);
         MAP.put(LEFT, animList);
         MAP.put(UP, animList);
-        MAP.put(DOWN, animList);
+
+        List<Image> animListDown = new ArrayList<>();
+        animListDown.add(D1);
+        animListDown.add(D2);
+        animListDown.add(D3);
+        animListDown.add(D4);
+        animListDown.add(D5);
+        animListDown.add(D6);
+        animListDown.add(D7);
+        MAP.put(DOWN, animListDown);
     }
 
     @Override

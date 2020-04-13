@@ -5,7 +5,7 @@
  */
 package fr.feraud.secretofnina.control;
 
-import fr.feraud.secretofnina.DirectionEnum;
+import fr.feraud.secretofnina.model.DirectionEnum;
 import fr.feraud.secretofnina.model.MovementTypeEnum;
 import fr.feraud.secretofnina.model.Sprite;
 import javafx.event.EventHandler;

@@ -64,28 +64,6 @@ public class GameRenderEngine {
 
         context.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
-        /*
-        //@param sx the source rectangle's X coordinate position.
-        double sx = spriteX;//viewPort.getMinX();
-        //@param sy the source rectangle's Y coordinate position.
-        double sy = spriteY; //viewPort.getMinY();
-        //@param sw the source rectangle's width.
-        double sw = viewPort.getWidth();
-        //@param sh the source rectangle's height.
-        double sh = viewPort.getHeight();
-        //@param dx the destination rectangle's X coordinate position.
-        double dx = super.getPositionX();
-        //@param dy the destination rectangle's Y coordinate position.
-        double dy = super.getPositionY();
-        //@param dw the destination rectangle's width.
-        double dw = viewPort.getWidth();
-        if (direction == DirectionEnum.LEFT) {
-        dw = -dw;
-        dx = dx - dw;
-        }
-        //@param dh the destination rectangle's height.
-        double dh = viewPort.getHeight();*/
-        //super.getImageView().setViewport(new Rectangle2D(sx, sy, viewPort.getWidth(), viewPort.getHeight()));
         players.forEach((player) -> {
             render(player, time);
         });
@@ -94,7 +72,6 @@ public class GameRenderEngine {
 
     private void render(Sprite player, double time) {
         player.update(time);
-
         MAP_RENDERER.get(player.getClass()).render(player, getGraphicsContext());
     }
 

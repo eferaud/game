@@ -5,11 +5,11 @@
  */
 package fr.feraud.secretofnina.view;
 
-import fr.feraud.secretofnina.DirectionEnum;
-import static fr.feraud.secretofnina.DirectionEnum.DOWN;
-import static fr.feraud.secretofnina.DirectionEnum.LEFT;
-import static fr.feraud.secretofnina.DirectionEnum.RIGHT;
-import static fr.feraud.secretofnina.DirectionEnum.UP;
+import fr.feraud.secretofnina.model.DirectionEnum;
+import static fr.feraud.secretofnina.model.DirectionEnum.DOWN;
+import static fr.feraud.secretofnina.model.DirectionEnum.LEFT;
+import static fr.feraud.secretofnina.model.DirectionEnum.RIGHT;
+import static fr.feraud.secretofnina.model.DirectionEnum.UP;
 import fr.feraud.secretofnina.model.Lapin;
 import java.util.ArrayList;
 import java.util.HashMap;
