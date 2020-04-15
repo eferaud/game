@@ -8,6 +8,7 @@ package fr.feraud.secretofnina.gamepad;
 import fr.feraud.secretofnina.model.DirectionEnum;
 import fr.feraud.secretofnina.model.MovementTypeEnum;
 import fr.feraud.secretofnina.model.Sprite;
+import java.util.logging.Logger;
 import net.java.games.input.Component;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
@@ -20,6 +21,8 @@ import net.java.games.input.EventQueue;
  * @author eric
  */
 public class GamePadController {
+
+    private final static Logger LOG = Logger.getLogger(GamePadController.class.getName());
 
     private GamePadEventHandler eventHandler;
     private Controller controller;
@@ -45,7 +48,7 @@ public class GamePadController {
         }
 
         EventQueue queue = controller.getEventQueue();
-        controller.setEventQueueSize(10);
+
         Event event = new Event();
 
         while (queue.getNextEvent(event)) {
@@ -79,50 +82,6 @@ public class GamePadController {
                 }
             }
         }
-
-        /*while (queue.getNextEvent(event)) {
-            StringBuffer buffer = new StringBuffer(controller.getName());
-            buffer.append(" at ");
-            buffer.append(event.getNanos()).append(", ");
-            Component comp = event.getComponent();
-            buffer.append(comp.getName()).append(" changed to ");
-            float value = event.getValue();
-            if (comp.isAnalog()) {
-                buffer.append(value);
-            } else {
-                if (value == 1.0f) {
-                    buffer.append("On");
-                } else {
-                    buffer.append("Off");
-                }
-            }
-            buffer.append(value);
-            System.out.println(buffer.toString());
-        }*/
     }
 
 }
-/*
-HAUT
-Controller (XBOX 360 For Windows) at 15941546000000, Axe Y changed to -4.5776367E-5
-Controller (XBOX 360 For Windows) at 15941546000000, Rotation Y changed to -4.5776367E-5
-
-Controller (XBOX 360 For Windows) at 15941546000000, Commande de pouce changed to Off
-Controller (XBOX 360 For Windows) at 15941687000000, Commande de pouce changed to Off
-
-
-BAS
-Controller (XBOX 360 For Windows) at 15970531000000, Commande de pouce changed to Off
-Controller (XBOX 360 For Windows) at 15970703000000, Commande de pouce changed to Off
-
-
-bouton
-Controller (XBOX 360 For Windows) at 16023265000000, Bouton 0 changed to On
-Controller (XBOX 360 For Windows) at 16023390000000, Bouton 0 changed to Off
-Controller (XBOX 360 For Windows) at 16025406000000, Bouton 1 changed to On
-Controller (XBOX 360 For Windows) at 16025546000000, Bouton 1 changed to Off
-Controller (XBOX 360 For Windows) at 16027015000000, Bouton 2 changed to On
-Controller (XBOX 360 For Windows) at 16027140000000, Bouton 2 changed to Off
-Controller (XBOX 360 For Windows) at 16027562000000, Bouton 3 changed to On
-Controller (XBOX 360 For Windows) at 16027734000000, Bouton 3 changed to Off
- */

@@ -16,6 +16,7 @@ import fr.feraud.secretofnina.view.sprite.LapinRenderer;
 import fr.feraud.secretofnina.view.sprite.RandyRenderer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -33,6 +34,8 @@ import javafx.stage.Stage;
  * @author eric
  */
 public class GameRenderEngine {
+
+    private final static Logger LOG = Logger.getLogger(GameRenderEngine.class.getName());
 
     private final Pane root;
     private final static boolean SHOW_POSITION = false;
@@ -85,7 +88,7 @@ public class GameRenderEngine {
         });
         render(this.map.getPlayer(), time);
 
-        //@TODO : render de la MAP
+        //@TODO : render de la MAP du jeu
     }
 
     private void render(Sprite player, double time) {

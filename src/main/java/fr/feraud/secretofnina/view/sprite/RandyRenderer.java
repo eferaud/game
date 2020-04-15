@@ -11,6 +11,7 @@ import static fr.feraud.secretofnina.model.DirectionEnum.LEFT;
 import static fr.feraud.secretofnina.model.DirectionEnum.RIGHT;
 import static fr.feraud.secretofnina.model.DirectionEnum.UP;
 import fr.feraud.secretofnina.model.Randy;
+import fr.feraud.secretofnina.utils.ImageUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -23,21 +24,21 @@ import javafx.scene.image.Image;
  */
 public class RandyRenderer extends DefaultSpriteRenderer<Randy> {
 
-    private final static Image R1 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy1.png");
-    private final static Image R2 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy2.png");
-    private final static Image R3 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy3.png");
-    private final static Image R4 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy4.png");
-    private final static Image R5 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy5.png");
-    private final static Image R6 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy6.png");
-    private final static Image R7 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy7.png");
+    private final static Image R1 = ImageUtils.buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy1.png");
+    private final static Image R2 = ImageUtils.buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy2.png");
+    private final static Image R3 = ImageUtils.buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy3.png");
+    private final static Image R4 = ImageUtils.buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy4.png");
+    private final static Image R5 = ImageUtils.buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy5.png");
+    private final static Image R6 = ImageUtils.buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy6.png");
+    private final static Image R7 = ImageUtils.buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy7.png");
 
-    private final static Image D1 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy_D0.png");
-    private final static Image D2 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy_D1.png");
-    private final static Image D3 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy_D2.png");
-    private final static Image D4 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy_D3.png");
-    private final static Image D5 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy_D4.png");
-    private final static Image D6 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy_D5.png");
-    private final static Image D7 = buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy_D6.png");
+    private final static Image D1 = ImageUtils.buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy_D0.png");
+    private final static Image D2 = ImageUtils.buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy_D1.png");
+    private final static Image D3 = ImageUtils.buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy_D2.png");
+    private final static Image D4 = ImageUtils.buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy_D3.png");
+    private final static Image D5 = ImageUtils.buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy_D4.png");
+    private final static Image D6 = ImageUtils.buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy_D5.png");
+    private final static Image D7 = ImageUtils.buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy_D6.png");
 
     private final static Map<DirectionEnum, List<Image>> MAP = new HashMap<>();
 

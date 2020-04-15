@@ -7,24 +7,20 @@ package fr.feraud.secretofnina.model;
 
 import java.util.List;
 import javafx.geometry.Point2D;
-import javafx.geometry.Rectangle2D;
 
 /**
  * Personnage du jeu
  *
  * @author eric
  */
-public abstract class Sprite {
+public abstract class Sprite extends Tile {
 
     private final static double VELOCITY = 0.08d;
 
-    private int positionX;
-    private int positionY;
     private double velocityX;
     private double velocityY;
     boolean currentlyMoving = false;
-    private int width;
-    private int height;
+
     //Nbr de point de vie au max
     private int lifeIndex;
 
@@ -39,18 +35,10 @@ public abstract class Sprite {
     private List<Point2D> clipping;
 
     public Sprite(int width, int height, int lifeIndex) {
-        this.width = width;
-        this.height = height;
-        this.positionX = 0;
-        this.positionY = 0;
+        super(0, 0, width, height);
         this.velocityX = 0;
         this.velocityY = 0;
         this.hitsIndex = 0;
-    }
-
-    public void setPosition(int x, int y) {
-        this.positionX = x;
-        this.positionY = y;
     }
 
     @Deprecated
@@ -75,26 +63,6 @@ public abstract class Sprite {
         this.positionY -= this.velocityY * time;
     }
 
-    public int getPositionX() {
-        return positionX;
-    }
-
-    public int getPositionY() {
-        return positionY;
-    }
-
-    public void setPositionY(int positionY) {
-        this.positionY = positionY;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
     public DirectionEnum getDirection() {
         return direction;
     }
@@ -109,10 +77,6 @@ public abstract class Sprite {
 
     public void setLoopCounter(int loopCounter) {
         this.loopCounter = loopCounter;
-    }
-
-    public Rectangle2D getBoundary() {
-        return new Rectangle2D(this.positionX, this.positionY, this.width, this.height);
     }
 
     public int getLifeIndex() {
@@ -141,12 +105,6 @@ public abstract class Sprite {
 
     public void setInCollision(boolean inCollision) {
         this.inCollision = inCollision;
-    }
-
-    @Override
-    public String toString() {
-        return " Position: [" + this.positionX + "," + this.positionY + "]"
-                + " Velocity: [" + this.velocityX + "," + this.velocityY + "]";
     }
 
     public void move(DirectionEnum direction, MovementTypeEnum movementType) {
@@ -202,32 +160,6 @@ public abstract class Sprite {
     public void eraseVelocity() {
         this.velocityX = 0;
         this.velocityY = 0;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 13 * hash + this.positionX;
-        hash = 13 * hash + this.positionY;
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Sprite other = (Sprite) obj;
-        if (this.positionX != other.positionX) {
-            return false;
-        }
-        return true;
     }
 
     public void setClipping(List<Point2D> clipping) {

@@ -17,12 +17,11 @@ public class StageMap {
 
     private List<Sprite> ennemies;
     private Image background;
-    private List<Sprite> borders;
     private Sprite player;
+    private List<Tile> tiles;
 
     public StageMap() {
         ennemies = new ArrayList<>();
-        borders = new ArrayList<>();
         ennemies.add(new Lapin(200, 200));
         ennemies.add(new Lapin(300, 200));
         ennemies.add(new Lapin(200, 200));
@@ -32,6 +31,8 @@ public class StageMap {
         ennemies.add(new Lapin(200, 500));
         player = new Randy(100, 100);
         background = new Image("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\background.png");
+        tiles = new ArrayList();
+
     }
 
     public List<Sprite> getEnnemies() {
@@ -50,14 +51,6 @@ public class StageMap {
         this.background = background;
     }
 
-    public List<Sprite> getBorders() {
-        return borders;
-    }
-
-    public void setBorders(List<Sprite> borders) {
-        this.borders = borders;
-    }
-
     public Sprite getPlayer() {
         return player;
     }
@@ -65,4 +58,13 @@ public class StageMap {
     public void setPlayer(Sprite player) {
         this.player = player;
     }
+
+    public List<Tile> getTiles() {
+        return tiles;
+    }
+
+    public void setTiles(List<Tile> tiles) {
+        this.tiles = tiles;
+    }
+
 }

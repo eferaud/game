@@ -7,16 +7,12 @@ package fr.feraud.secretofnina.view.sprite;
 
 import fr.feraud.secretofnina.model.DirectionEnum;
 import fr.feraud.secretofnina.model.Sprite;
-import java.util.ArrayList;
+import fr.feraud.secretofnina.utils.ImageUtils;
 import java.util.List;
 import java.util.Map;
-import javafx.geometry.Point2D;
+import java.util.logging.Logger;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.PixelReader;
-import javafx.scene.image.PixelWriter;
-import javafx.scene.image.WritableImage;
-import javafx.scene.paint.Color;
 
 /**
  * Les Renderer sont stateless
@@ -25,6 +21,8 @@ import javafx.scene.paint.Color;
  * @param <T>
  */
 public abstract class DefaultSpriteRenderer<T extends Sprite> {
+
+    private final static Logger LOG = Logger.getLogger(DefaultSpriteRenderer.class.getName());
 
     private final static int FRAME_RATE = 6;
 
@@ -78,58 +76,7 @@ public abstract class DefaultSpriteRenderer<T extends Sprite> {
             player.setLoopCounter(0);
         }
 
-        player.setClipping(getClipping(image, player.getPositionX(), player.getPositionY(), reverse));
-    }
-
-    //TODO : prendre en compte le reversement vers la gauche
-    private List<Point2D> getClipping(Image image, int tx, int ty, boolean reverse) {
-
-        List<Point2D> points = new ArrayList<>();
-        PixelReader pixelReader = image.getPixelReader();
-
-        //Balayage total, pas optimal
-        for (int y = 0; y < (int) image.getHeight(); y++) {
-            for (int x = 0; x < (int) image.getWidth(); x++) {
-                Color color = pixelReader.getColor(x, y);
-                if (color != null) {
-                    //c'est un contour
-                    points.add(new Point2D(x + tx, y + ty));
-                }
-            }
-        }
-        return points;
-    }
-
-    protected static Image buildImageWithTransparency(String spriteSheetPath) {
-        Image spriteSheet = new Image(spriteSheetPath);
-        Color backGroundColor = null;
-        //Creating a writable image
-        WritableImage wImage = new WritableImage((int) spriteSheet.getWidth(), (int) spriteSheet.getHeight());
-
-        //Reading color from the loaded image
-        PixelReader pixelReader = spriteSheet.getPixelReader();
-
-        //getting the pixel writer
-        PixelWriter writer = wImage.getPixelWriter();
-
-        //Reading the color of the image
-        for (int y = 0; y < (int) spriteSheet.getHeight(); y++) {
-            for (int x = 0; x < (int) spriteSheet.getWidth(); x++) {
-                //Retrieving the color of the pixel of the loaded image
-                Color color = pixelReader.getColor(x, y);
-
-                if (backGroundColor == null) {
-                    backGroundColor = color;
-                }
-
-                if (backGroundColor.equals(color)) {
-                    //writer.setColor(x, y, color.darker());
-                } else {
-                    writer.setColor(x, y, color);
-                }
-            }
-        }
-        return wImage;
+        player.setClipping(ImageUtils.getClipping(image, player.getPositionX(), player.getPositionY(), reverse));
     }
 
     public abstract Map<DirectionEnum, List<Image>> getMAP();

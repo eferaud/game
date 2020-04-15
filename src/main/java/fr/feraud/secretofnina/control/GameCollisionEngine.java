@@ -5,13 +5,10 @@
  */
 package fr.feraud.secretofnina.control;
 
-import fr.feraud.secretofnina.model.DirectionEnum;
-import fr.feraud.secretofnina.model.MovementTypeEnum;
 import fr.feraud.secretofnina.model.Sprite;
 import fr.feraud.secretofnina.model.StageMap;
-import java.util.ArrayList;
-import java.util.List;
-import javafx.geometry.Point2D;
+import fr.feraud.secretofnina.model.Tile;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,9 +16,11 @@ import javafx.geometry.Point2D;
  */
 public class GameCollisionEngine implements IGameCollisionEngine {
 
+    private final static Logger LOG = Logger.getLogger(GameCollisionEngine.class.getName());
     private StageMap map;
 
     public GameCollisionEngine(StageMap map) {
+        LOG.info("GameCollisionEngine");
         this.map = map;
     }
 
@@ -32,62 +31,14 @@ public class GameCollisionEngine implements IGameCollisionEngine {
     @Override
     public void checkCollision(double time) {
         map.getEnnemies().forEach((player) -> {
-            checkCollision(player, time);
+            processCollision(player, time);
         });
-        checkCollision(map.getPlayer(), time);
+        processCollision(map.getPlayer(), time);
     }
 
-    /**
-     * Check si il y a une collision entre le player et tous les autres
-     *
-     * @param player
-     * @param time
-     * @return La liste des directions qui sont en collision (non dédoublonnée)
-     */
-    private List<DirectionEnum> getCollisions(Sprite player, double time) {
-        List<DirectionEnum> collisions = new ArrayList<>();
-        for (Sprite other : map.getEnnemies()) {
-            if (player != other) { //pas de self collision
-                if (intersects(player, other)) {
-                    collisions.addAll(getIntersectionSide(player, other));
-                }
-            }
-        }
-        return collisions;
-    }
-
-    private boolean intersects(Sprite sprite, Sprite other) {
-        if (sprite.getClipping() != null) {
-            for (Point2D point2D : sprite.getClipping()) {
-                if (other.getClipping().contains(point2D)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    private boolean intersects2(Sprite sprite, Sprite other) {
-        return other.getBoundary().intersects(sprite.getBoundary());
-    }
-
-    private List<DirectionEnum> getIntersectionSide(Sprite sprite, Sprite other) {
-
-        List<DirectionEnum> collisions = new ArrayList<>();
-
-        //@TODO marche bof
-        if (intersects(sprite, other) && !sprite.getMovementType().equals(MovementTypeEnum.STOPED)) {
-            collisions.add(other.getDirection());
-        }
-
-        return collisions;
-    }
-
-    private void checkCollision(Sprite player, double time) {
+    private void processCollision(Sprite player, double time) {
         player.update(time);
-        List<DirectionEnum> collisions = getCollisions(player, time);
-        if (!collisions.isEmpty()) {
+        if (isCollisions(player, time)) {
             player.setInCollision(true);
             player.rollback(time);
             player.eraseVelocity();
@@ -96,4 +47,51 @@ public class GameCollisionEngine implements IGameCollisionEngine {
         }
     }
 
+    /**
+     * Check si il y a une collision entre le player et tous les autres
+     *
+     * @param player
+     * @param time
+     */
+    private boolean isCollisions(Sprite player, double time) {
+        for (Sprite other : map.getEnnemies()) {
+            if (player != other) { //pas de self collision
+                if (broadCollision(player, other) && narrowSpriteCollision(player, other)) {
+                    return true;
+                }
+            }
+        }
+        for (Tile tile : map.getTiles()) {
+            if (broadCollision(player, tile) && narrowTileCollision(player, tile)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    //Collision étroite
+    private boolean narrowSpriteCollision(Sprite sprite, Sprite other) {
+        if (sprite.getClipping() != null) {
+            if (sprite.getClipping().stream().anyMatch((point2D) -> (other.getClipping().contains(point2D)))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //Collision étroite
+    private boolean narrowTileCollision(Sprite sprite, Tile other) {
+        if (sprite.getClipping() != null) {
+            if (sprite.getClipping().stream().anyMatch((point2D) -> (other.getBoundary().contains(point2D)))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //Collision large
+    private boolean broadCollision(Tile sprite, Tile other) {
+        return other.getBoundary().intersects(sprite.getBoundary());
+    }
 }
