@@ -19,30 +19,4 @@ public class Lapin extends Sprite {
         super(WIDTH, HEIGHT, LIFE_POINT);
         super.setPosition(x, y);
     }
-
-    //TODO
-    /* @Override
-    protected Rectangle2D getSpritePosition() {
-
-        double x = super.getPositionX();
-
-        double y = super.getPositionY();
-
-        int width = WIDTH;
-
-        int height = HEIGHT;
-
-        switch (super.getDirection()) {
-            case LEFT:
-                width = -WIDTH;
-
-                break;
-            case RIGHT:
-                width = WIDTH;
-                //x = x + 10;
-                break;
-
-        }
-        return new Rectangle2D(x, y, width, height);
-    }*/
 }

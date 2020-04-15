@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.feraud.secretofnina.view;
+package fr.feraud.secretofnina.view.sprite;
 
 import fr.feraud.secretofnina.model.DirectionEnum;
 import static fr.feraud.secretofnina.model.DirectionEnum.DOWN;
@@ -53,6 +53,10 @@ public class RandyRenderer extends DefaultSpriteRenderer<Randy> {
         MAP.put(RIGHT, animList);
         MAP.put(LEFT, animList);
         MAP.put(UP, animList);
+        MAP.put(DirectionEnum.UP_LEFT, animList);
+        MAP.put(DirectionEnum.UP_RIGHT, animList);
+        MAP.put(DirectionEnum.DOWN_LEFT, animList);
+        MAP.put(DirectionEnum.DOWN_RIGHT, animList);
 
         List<Image> animListDown = new ArrayList<>();
         animListDown.add(D1);
@@ -69,5 +73,4 @@ public class RandyRenderer extends DefaultSpriteRenderer<Randy> {
     public Map<DirectionEnum, List<Image>> getMAP() {
         return MAP;
     }
-
 }

@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class GameIAEngine {
 
-    List<Sprite> players;
+    private List<Sprite> players;
 
     private final static Map<Class, DefaultIA> MAP_IA = new HashMap<>();
 

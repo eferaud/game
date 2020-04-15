@@ -1,13 +1,12 @@
 package fr.feraud.secretofnina;
 
+import fr.feraud.secretofnina.control.GameCollisionEngine;
 import fr.feraud.secretofnina.control.GameIAEngine;
+import fr.feraud.secretofnina.control.IGameCollisionEngine;
 import fr.feraud.secretofnina.control.PlayerEventHandler;
-import fr.feraud.secretofnina.model.Lapin;
-import fr.feraud.secretofnina.model.Randy;
-import fr.feraud.secretofnina.model.Sprite;
+import fr.feraud.secretofnina.gamepad.GamePadController;
+import fr.feraud.secretofnina.model.StageMap;
 import fr.feraud.secretofnina.view.GameRenderEngine;
-import java.util.ArrayList;
-import java.util.List;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -18,27 +17,24 @@ import javafx.stage.Stage;
  */
 public class App extends Application {
 
-    private List<Sprite> players = new ArrayList<>();
-
     @Override
     //where the application will be displayed
     public void start(Stage stage) {
 
         ApplicationParameters applicationParameters = new ApplicationParameters();
+        StageMap map = new StageMap();
 
-        players.add(new Randy(100, 180));
-        for (int i = 0; i < 1000; i++) {
-            players.add(new Lapin(200, 280));
-        }
+        GameRenderEngine gameRenderEngine = new GameRenderEngine(stage, applicationParameters, map);
+        gameRenderEngine.attachHandler(new PlayerEventHandler(map.getPlayer()));
 
-        GameRenderEngine gameRenderEngine = new GameRenderEngine(stage, applicationParameters, players);
-        gameRenderEngine.attachHandler(new PlayerEventHandler(players.get(0)));
+        GameIAEngine gameIAEngine = new GameIAEngine(map.getEnnemies());
+        IGameCollisionEngine gameCollisionEngine = new GameCollisionEngine(map);
 
-        GameIAEngine gameIAEngine = new GameIAEngine(players);
+        GamePadController gamePadController = new GamePadController(map.getPlayer());
 
         stage.show();
 
-        GamePlayLoop gamePlayLoop = new GamePlayLoop(gameRenderEngine, gameIAEngine);
+        GamePlayLoop gamePlayLoop = new GamePlayLoop(gameRenderEngine, gameIAEngine, gameCollisionEngine, gamePadController);
         gamePlayLoop.start();
 
     }

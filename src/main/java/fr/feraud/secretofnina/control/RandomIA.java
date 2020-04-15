@@ -25,7 +25,7 @@ public class RandomIA extends DefaultIA {
 
     @Override
     public void play(Sprite sprite) {
-        int randDirection = rand.nextInt(4);
+        int randDirection = rand.nextInt(8);
         int randAction = rand.nextInt(4);
         sprite.move(Arrays.asList(DirectionEnum.values()).get(randDirection), Arrays.asList(MovementTypeEnum.values()).get(randAction));
     }

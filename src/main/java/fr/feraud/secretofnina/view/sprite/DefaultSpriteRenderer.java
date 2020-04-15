@@ -3,12 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.feraud.secretofnina.view;
+package fr.feraud.secretofnina.view.sprite;
 
 import fr.feraud.secretofnina.model.DirectionEnum;
 import fr.feraud.secretofnina.model.Sprite;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
@@ -50,10 +52,22 @@ public abstract class DefaultSpriteRenderer<T extends Sprite> {
         //@param dh the destination rectangle's height.
         double dh = player.getHeight();
 
+        boolean reverse = false;
         switch (player.getDirection()) {
             case LEFT:
                 dw = -dw;
                 dx = dx - dw;
+                reverse = true;
+                break;
+            case UP_LEFT:
+                dw = -dw;
+                dx = dx - dw;
+                reverse = true;
+                break;
+            case DOWN_LEFT:
+                dw = -dw;
+                dx = dx - dw;
+                reverse = true;
                 break;
         }
         graphicsContext.drawImage(image, 0, 0, player.getWidth(), player.getHeight(), dx, dy, dw, dh);
@@ -63,6 +77,27 @@ public abstract class DefaultSpriteRenderer<T extends Sprite> {
         } else {
             player.setLoopCounter(0);
         }
+
+        player.setClipping(getClipping(image, player.getPositionX(), player.getPositionY(), reverse));
+    }
+
+    //TODO : prendre en compte le reversement vers la gauche
+    private List<Point2D> getClipping(Image image, int tx, int ty, boolean reverse) {
+
+        List<Point2D> points = new ArrayList<>();
+        PixelReader pixelReader = image.getPixelReader();
+
+        //Balayage total, pas optimal
+        for (int y = 0; y < (int) image.getHeight(); y++) {
+            for (int x = 0; x < (int) image.getWidth(); x++) {
+                Color color = pixelReader.getColor(x, y);
+                if (color != null) {
+                    //c'est un contour
+                    points.add(new Point2D(x + tx, y + ty));
+                }
+            }
+        }
+        return points;
     }
 
     protected static Image buildImageWithTransparency(String spriteSheetPath) {

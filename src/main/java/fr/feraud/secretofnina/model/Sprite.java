@@ -5,6 +5,8 @@
  */
 package fr.feraud.secretofnina.model;
 
+import java.util.List;
+import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 
 /**
@@ -33,6 +35,8 @@ public abstract class Sprite {
     private MovementTypeEnum movementType = MovementTypeEnum.STOPED;
     //MAJ uniquement dans la méthode render
     private int loopCounter = 0;
+    private boolean inCollision = false;
+    private List<Point2D> clipping;
 
     public Sprite(int width, int height, int lifeIndex) {
         this.width = width;
@@ -66,12 +70,13 @@ public abstract class Sprite {
         this.positionY += this.velocityY * time;
     }
 
-    public int getPositionX() {
-        return positionX;
+    public void rollback(double time) {
+        this.positionX -= this.velocityX * time;
+        this.positionY -= this.velocityY * time;
     }
 
-    public void setPositionX(int positionX) {
-        this.positionX = positionX;
+    public int getPositionX() {
+        return positionX;
     }
 
     public int getPositionY() {
@@ -106,14 +111,8 @@ public abstract class Sprite {
         this.loopCounter = loopCounter;
     }
 
-    @Deprecated
     public Rectangle2D getBoundary() {
         return new Rectangle2D(this.positionX, this.positionY, this.width, this.height);
-    }
-
-    @Deprecated
-    public boolean intersects(Sprite s) {
-        return s.getBoundary().intersects(this.getBoundary());
     }
 
     public int getLifeIndex() {
@@ -136,6 +135,14 @@ public abstract class Sprite {
         return currentlyMoving;
     }
 
+    public boolean isInCollision() {
+        return inCollision;
+    }
+
+    public void setInCollision(boolean inCollision) {
+        this.inCollision = inCollision;
+    }
+
     @Override
     public String toString() {
         return " Position: [" + this.positionX + "," + this.positionY + "]"
@@ -143,49 +150,92 @@ public abstract class Sprite {
     }
 
     public void move(DirectionEnum direction, MovementTypeEnum movementType) {
-        //System.out.println("move : " + movementType + " " + direction);
-        this.direction = direction;
-        this.movementType = movementType;
+        if (direction != null) {
+            //System.out.println("move : " + movementType + " " + direction);
+            this.direction = direction;
+            this.movementType = movementType;
 
-        //Cas relachement d'une direction
-        if (movementType.equals(MovementTypeEnum.STOPED)) {
-            switch (direction) {
-                case RIGHT:
-                    this.velocityX = 0;
-                    break;
-                case LEFT:
-                    this.velocityX = 0;
-                    break;
-                case UP:
-                    this.velocityY = 0;
-                    break;
-                case DOWN:
-                    this.velocityY = 0;
-                    break;
-            }
             //Cas demande direction
-        } else {
-            switch (direction) {
-                case RIGHT:
-                    this.velocityX = VELOCITY;
-                    break;
-                case LEFT:
-                    this.velocityX = -VELOCITY;
-                    break;
-                case UP:
-                    this.velocityY = -VELOCITY;
-                    break;
-                case DOWN:
-                    this.velocityY = VELOCITY;
-                    break;
+            this.velocityX = 0;
+            this.velocityY = 0;
+            if (!movementType.equals(MovementTypeEnum.STOPED)) {
+                switch (direction) {
+                    case RIGHT:
+                        this.velocityX = VELOCITY;
+                        break;
+                    case LEFT:
+                        this.velocityX = -VELOCITY;
+                        break;
+                    case UP:
+                        this.velocityY = -VELOCITY;
+                        break;
+                    case DOWN:
+                        this.velocityY = VELOCITY;
+                        break;
+                    case UP_RIGHT:
+                        this.velocityY = -VELOCITY;
+                        this.velocityX = VELOCITY;
+                        break;
+                    case UP_LEFT:
+                        this.velocityY = -VELOCITY;
+                        this.velocityX = -VELOCITY;
+                        break;
+                    case DOWN_LEFT:
+                        this.velocityY = VELOCITY;
+                        this.velocityX = -VELOCITY;
+                        break;
+                    case DOWN_RIGHT:
+                        this.velocityY = VELOCITY;
+                        this.velocityX = VELOCITY;
+                        break;
+                }
             }
         }
-
-        if (movementType.equals(MovementTypeEnum.STOPED) && velocityY == 0 && velocityX == 0) {
+        if (movementType != null && movementType.equals(MovementTypeEnum.STOPED) && velocityY == 0 && velocityX == 0) {
             currentlyMoving = false;
         } else {
             currentlyMoving = true;
         }
         //System.out.println("loopCounter = " + loopCounter);
     }
+
+    public void eraseVelocity() {
+        this.velocityX = 0;
+        this.velocityY = 0;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 13 * hash + this.positionX;
+        hash = 13 * hash + this.positionY;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Sprite other = (Sprite) obj;
+        if (this.positionX != other.positionX) {
+            return false;
+        }
+        return true;
+    }
+
+    public void setClipping(List<Point2D> clipping) {
+        this.clipping = clipping;
+    }
+
+    public List<Point2D> getClipping() {
+        return clipping;
+    }
+
 }

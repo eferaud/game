@@ -3,20 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.feraud.secretofnina.model;
+package fr.feraud.secretofnina.gamepad;
 
 /**
  *
  * @author eric
  */
-public enum DirectionEnum {
+public class GamePadEventHandler {
 
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT,
-    UP_LEFT,
-    UP_RIGHT,
-    DOWN_LEFT,
-    DOWN_RIGHT;
 }
