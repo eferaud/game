@@ -15,7 +15,7 @@ public class Randy extends Sprite {
     private static final int HEIGHT = 43;
     private static final int LIFE_POINT = 50;
 
-    public Randy(int x, int y) {
+    public Randy(Integer x, Integer y) {
         super(WIDTH, HEIGHT, LIFE_POINT);
         super.setPosition(x, y);
     }

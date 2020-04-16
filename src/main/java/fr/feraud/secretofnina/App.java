@@ -6,6 +6,7 @@ import fr.feraud.secretofnina.control.IGameCollisionEngine;
 import fr.feraud.secretofnina.control.PlayerEventHandler;
 import fr.feraud.secretofnina.gamepad.GamePadController;
 import fr.feraud.secretofnina.model.StageMap;
+import fr.feraud.secretofnina.model.json.StageMapSerializer;
 import fr.feraud.secretofnina.view.GameRenderEngine;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -19,10 +20,10 @@ public class App extends Application {
 
     @Override
     //where the application will be displayed
-    public void start(Stage stage) {
-
+    public void start(Stage stage) throws Exception {
+        StageMapSerializer.test();
         ApplicationParameters applicationParameters = new ApplicationParameters();
-        StageMap map = new StageMap();
+        StageMap map = new StageMap(StageMap.MAP1);
 
         GameRenderEngine gameRenderEngine = new GameRenderEngine(stage, applicationParameters, map);
         gameRenderEngine.attachHandler(new PlayerEventHandler(map.getPlayer()));

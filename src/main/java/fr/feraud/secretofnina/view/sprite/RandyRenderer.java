@@ -10,7 +10,6 @@ import static fr.feraud.secretofnina.model.DirectionEnum.DOWN;
 import static fr.feraud.secretofnina.model.DirectionEnum.LEFT;
 import static fr.feraud.secretofnina.model.DirectionEnum.RIGHT;
 import static fr.feraud.secretofnina.model.DirectionEnum.UP;
-import fr.feraud.secretofnina.model.Randy;
 import fr.feraud.secretofnina.utils.ImageUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +21,7 @@ import javafx.scene.image.Image;
  *
  * @author eric
  */
-public class RandyRenderer extends DefaultSpriteRenderer<Randy> {
+public class RandyRenderer extends DefaultSpriteRenderer {
 
     private final static Image R1 = ImageUtils.buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy1.png");
     private final static Image R2 = ImageUtils.buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\Randy2.png");

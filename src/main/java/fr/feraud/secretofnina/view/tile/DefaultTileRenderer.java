@@ -6,6 +6,7 @@
 package fr.feraud.secretofnina.view.tile;
 
 import fr.feraud.secretofnina.model.Tile;
+import fr.feraud.secretofnina.view.IRenderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
@@ -13,14 +14,14 @@ import javafx.scene.image.Image;
  *
  * @author eric
  */
-public abstract class DefaultTileRenderer {
+public abstract class DefaultTileRenderer implements IRenderer {
 
     public void render(Tile tile, GraphicsContext graphicsContext) {
         //@param dx the destination rectangle's X coordinate position.
-        double dx = tile.getPositionX();
+        double dx = tile.getMapPositionX();
 
         //@param dy the destination rectangle's Y coordinate position.
-        double dy = tile.getPositionY();
+        double dy = tile.getMapPositionY();
 
         //@param dw the destination rectangle's width.
         double dw = tile.getWidth();

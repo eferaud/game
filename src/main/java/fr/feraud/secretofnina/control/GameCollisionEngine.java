@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 public class GameCollisionEngine implements IGameCollisionEngine {
 
     private final static Logger LOG = Logger.getLogger(GameCollisionEngine.class.getName());
-    private StageMap map;
+    private final StageMap map;
 
     public GameCollisionEngine(StageMap map) {
         LOG.info("GameCollisionEngine");

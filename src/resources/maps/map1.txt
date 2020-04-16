@@ -1,0 +1,21 @@
+{
+  "name": "map1.txt",
+  "tileSet": "tileset1.png",
+  "width": 2,
+  "height": 2,
+  "tiles": [
+    {
+      "id": 1,
+      "p": true,
+      "t": false
+    }
+  ],
+  "ennemis": [
+    {
+      "name": "Lapin",
+      "x": 200,
+      "y": 200
+    }
+  ],
+  "backGroundImage": "background.png"
+}

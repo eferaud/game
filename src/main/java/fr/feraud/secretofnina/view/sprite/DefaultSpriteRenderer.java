@@ -8,6 +8,7 @@ package fr.feraud.secretofnina.view.sprite;
 import fr.feraud.secretofnina.model.DirectionEnum;
 import fr.feraud.secretofnina.model.Sprite;
 import fr.feraud.secretofnina.utils.ImageUtils;
+import fr.feraud.secretofnina.view.IRenderer;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -20,12 +21,13 @@ import javafx.scene.image.Image;
  * @author eric
  * @param <T>
  */
-public abstract class DefaultSpriteRenderer<T extends Sprite> {
+public abstract class DefaultSpriteRenderer implements IRenderer<Sprite> {
 
     private final static Logger LOG = Logger.getLogger(DefaultSpriteRenderer.class.getName());
 
     private final static int FRAME_RATE = 6;
 
+    @Override
     public void render(Sprite player, GraphicsContext graphicsContext) {
         int nbrImage = getMAP().get(player.getDirection()).size();
         if (player.getLoopCounter() == (FRAME_RATE * nbrImage)) {
@@ -39,10 +41,10 @@ public abstract class DefaultSpriteRenderer<T extends Sprite> {
         Image image = getMAP().get(player.getDirection()).get(imageNumber);
 
         //@param dx the destination rectangle's X coordinate position.
-        double dx = player.getPositionX();
+        double dx = player.getMapPositionX();
 
         //@param dy the destination rectangle's Y coordinate position.
-        double dy = player.getPositionY();
+        double dy = player.getMapPositionY();
 
         //@param dw the destination rectangle's width.
         double dw = player.getWidth();
@@ -76,7 +78,7 @@ public abstract class DefaultSpriteRenderer<T extends Sprite> {
             player.setLoopCounter(0);
         }
 
-        player.setClipping(ImageUtils.getClipping(image, player.getPositionX(), player.getPositionY(), reverse));
+        player.setClipping(ImageUtils.getClipping(image, player.getMapPositionX(), player.getMapPositionY(), reverse));
     }
 
     public abstract Map<DirectionEnum, List<Image>> getMAP();

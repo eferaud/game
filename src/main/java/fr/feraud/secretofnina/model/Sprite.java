@@ -15,7 +15,7 @@ import javafx.geometry.Point2D;
  */
 public abstract class Sprite extends Tile {
 
-    private final static double VELOCITY = 0.08d;
+    private final static double VELOCITY = 0.10d;
 
     private double velocityX;
     private double velocityY;
@@ -54,13 +54,13 @@ public abstract class Sprite extends Tile {
     }
 
     public void update(double time) {
-        this.positionX += this.velocityX * time;
-        this.positionY += this.velocityY * time;
+        this.mapPositionX += this.velocityX * time;
+        this.mapPositionY += this.velocityY * time;
     }
 
     public void rollback(double time) {
-        this.positionX -= this.velocityX * time;
-        this.positionY -= this.velocityY * time;
+        this.mapPositionX -= this.velocityX * time;
+        this.mapPositionY -= this.velocityY * time;
     }
 
     public DirectionEnum getDirection() {

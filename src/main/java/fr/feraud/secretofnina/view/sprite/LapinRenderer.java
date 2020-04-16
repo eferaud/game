@@ -10,7 +10,6 @@ import static fr.feraud.secretofnina.model.DirectionEnum.DOWN;
 import static fr.feraud.secretofnina.model.DirectionEnum.LEFT;
 import static fr.feraud.secretofnina.model.DirectionEnum.RIGHT;
 import static fr.feraud.secretofnina.model.DirectionEnum.UP;
-import fr.feraud.secretofnina.model.Lapin;
 import fr.feraud.secretofnina.utils.ImageUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +21,7 @@ import javafx.scene.image.Image;
  *
  * @author eric
  */
-public class LapinRenderer extends DefaultSpriteRenderer<Lapin> {
+public class LapinRenderer extends DefaultSpriteRenderer {
 
     private final static Image I1 = ImageUtils.buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\lapin1.png");
     private final static Image I2 = ImageUtils.buildImageWithTransparency("file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\lapin2.png");
