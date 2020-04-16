@@ -77,7 +77,7 @@ public class GameRenderEngine {
      *
      * @param time Le temps en milliseconde depuis le dernier appel
      */
-    public void render(double time) {
+    public synchronized void render(double time) {
         GraphicsContext context = spriteLayer.getGraphicsContext2D();
 
         context.clearRect(0, 0, spriteLayer.getWidth(), spriteLayer.getHeight());

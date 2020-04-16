@@ -33,7 +33,7 @@ public class GameIAEngine {
      *
      * @param time Le temps en milliseconde depuis le dernier appel
      */
-    public void play(double time) {
+    public synchronized void play(double time) {
         players.forEach((player) -> {
             play(player, time);
         });

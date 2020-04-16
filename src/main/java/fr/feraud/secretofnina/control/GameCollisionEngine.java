@@ -29,7 +29,7 @@ public class GameCollisionEngine implements IGameCollisionEngine {
      * @param time Le temps en milliseconde depuis le dernier appel
      */
     @Override
-    public void checkCollision(double time) {
+    public synchronized void checkCollision(double time) {
         map.getEnnemies().forEach((player) -> {
             processCollision(player, time);
         });

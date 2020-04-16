@@ -22,7 +22,7 @@ public class ImageUtils {
 
     //TODO : mettre un système de cache mémoire (id image -> List<Point2D> détourrés)
     //Comme ça il n'y a plus à faire la translation reserve ou pas
-    public static List<Point2D> getClipping(Image image, int tx, int ty, boolean reverse) {
+    public static List<Point2D> getClipping(Image image, double tx, double ty, boolean reverse) {
 
         List<Point2D> points = new ArrayList<>();
         PixelReader pixelReader = image.getPixelReader();
@@ -34,9 +34,9 @@ public class ImageUtils {
                 if (color != null) {
                     //c'est un contour
                     if (reverse) {
-                        points.add(new Point2D(image.getWidth() - x + tx, y + ty));
+                        points.add(new Point2D((int) (image.getWidth() - x + tx), (int) (y + ty)));
                     } else {
-                        points.add(new Point2D(x + tx, y + ty));
+                        points.add(new Point2D((int) (x + tx), (int) (y + ty)));
                     }
                 }
             }

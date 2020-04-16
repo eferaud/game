@@ -13,8 +13,8 @@ import javafx.geometry.Rectangle2D;
  */
 public abstract class Tile {
 
-    protected int mapPositionX;
-    protected int mapPositionY;
+    protected double mapPositionX;
+    protected double mapPositionY;
     private final int width;
     private final int height;
 
@@ -25,7 +25,7 @@ public abstract class Tile {
         this.height = height;
     }
 
-    public void setPosition(int x, int y) {
+    protected void setPosition(int x, int y) {
         this.mapPositionX = x;
         this.mapPositionY = y;
     }
@@ -34,11 +34,11 @@ public abstract class Tile {
         return new Rectangle2D(this.mapPositionX, this.mapPositionY, this.width, this.height);
     }
 
-    public int getMapPositionX() {
+    public double getMapPositionX() {
         return mapPositionX;
     }
 
-    public int getMapPositionY() {
+    public double getMapPositionY() {
         return mapPositionY;
     }
 
@@ -52,9 +52,9 @@ public abstract class Tile {
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 67 * hash + this.mapPositionX;
-        hash = 67 * hash + this.mapPositionY;
+        int hash = 3;
+        hash = 97 * hash + (int) (Double.doubleToLongBits(this.mapPositionX) ^ (Double.doubleToLongBits(this.mapPositionX) >>> 32));
+        hash = 97 * hash + (int) (Double.doubleToLongBits(this.mapPositionY) ^ (Double.doubleToLongBits(this.mapPositionY) >>> 32));
         return hash;
     }
 

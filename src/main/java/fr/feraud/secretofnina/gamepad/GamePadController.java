@@ -38,7 +38,7 @@ public class GamePadController {
         this.player = player;
     }
 
-    public void run() {
+    public synchronized void run() {
 
         Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
         for (final net.java.games.input.Controller c : controllers) {
