@@ -11,8 +11,8 @@ package fr.feraud.secretofnina.model;
  */
 public class PlainTile extends Tile {
 
-    public PlainTile(int positionX, int positionY, int width, int height) {
-        super(positionX, positionY, width, height);
+    public PlainTile(int tilesetX, int tilesetY, int width, int height) {
+        super(tilesetX, tilesetY, width, height);
     }
 
 }

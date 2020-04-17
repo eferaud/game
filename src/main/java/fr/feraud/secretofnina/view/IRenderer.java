@@ -5,16 +5,19 @@
  */
 package fr.feraud.secretofnina.view;
 
-import fr.feraud.secretofnina.model.Tile;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.Node;
+import javafx.scene.layout.Pane;
 
 /**
  *
  * @author eric
- * @param <T>
+ * @param <T> Le type d'élements à rendre
+ * @param <L> Le type de layer (node)
  */
-public interface IRenderer<T extends Tile> {
+public interface IRenderer<T, L extends Node> {
 
-    public void render(T element, GraphicsContext graphicsContext);
+    public void render(T element, L layer);
+
+    public L initLayer(T element, Pane parent, int width, int height);
 
 }

@@ -13,14 +13,17 @@ import javafx.geometry.Rectangle2D;
  */
 public abstract class Tile {
 
-    protected double mapPositionX;
-    protected double mapPositionY;
+    private final int tilesetX;
+    private final int tilesetY;
     private final int width;
     private final int height;
 
-    public Tile(int positionX, int positionY, int width, int height) {
-        this.mapPositionX = positionX;
-        this.mapPositionY = positionY;
+    protected double mapPositionX;
+    protected double mapPositionY;
+
+    public Tile(int tilesetX, int tilesetY, int width, int height) {
+        this.tilesetX = tilesetX;
+        this.tilesetY = tilesetY;
         this.width = width;
         this.height = height;
     }
@@ -48,6 +51,22 @@ public abstract class Tile {
 
     public int getHeight() {
         return height;
+    }
+
+    /**
+     *
+     * @return La position sur l'axe des X dans le tileset
+     */
+    public int getTilesetX() {
+        return tilesetX;
+    }
+
+    /**
+     *
+     * @return La position sur l'axe des Y dans le tileset
+     */
+    public int getTilesetY() {
+        return tilesetY;
     }
 
     @Override

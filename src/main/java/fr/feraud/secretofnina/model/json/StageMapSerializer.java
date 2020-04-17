@@ -60,11 +60,8 @@ public class StageMapSerializer {
         map.setName("map1.txt");
         map.setTileSet("tileset1.png");
         List<TileJson> tiles = new ArrayList<>();
-        TileJson tileJson1 = new TileJson();
-        tileJson1.setP(Boolean.TRUE);
-        tileJson1.setT(Boolean.FALSE);
-        tileJson1.setId(1);
-        tiles.add(tileJson1);
+        tiles.add(new TileJson(0, 0, 0, 0, true, false));
+        tiles.add(new TileJson(16, 16, 13, 3, true, false));
         map.setTiles(tiles);
 
         try {

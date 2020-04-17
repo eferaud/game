@@ -9,10 +9,13 @@ import fr.feraud.secretofnina.model.json.SpriteJson;
 import fr.feraud.secretofnina.model.json.StageMapJson;
 import fr.feraud.secretofnina.model.json.StageMapSerializer;
 import fr.feraud.secretofnina.model.json.TileJson;
+import fr.feraud.secretofnina.utils.ImageUtils;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 
 /**
@@ -28,24 +31,27 @@ public class StageMap {
     private List<Sprite> ennemies;
     private Image background;
     private Sprite player;
-    private List<Tile> tiles; //13*15 cases.
+    private List<Tile> tiles;
+    private final Map<Point2D, Image> tilesImage;
 
     public StageMap(String mapPath) throws IOException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
-        StageMapJson json = StageMapSerializer.deserialize(mapPath);
+        StageMapJson datas = StageMapSerializer.deserialize(mapPath);
         tiles = new ArrayList();
-        for (TileJson tileJson : json.getTiles()) {
-            tiles.add(new PlainTile(0, 0, 16, 16));
+        for (TileJson tileJson : datas.getTiles()) {
+            PlainTile t = new PlainTile(tileJson.getX(), tileJson.getY(), 16, 16);
+            t.setPosition(tileJson.getPx(), tileJson.getPy());
+            tiles.add(t);
         }
         ennemies = new ArrayList();
-        for (SpriteJson ennmieJson : json.getEnnemis()) {
+        for (SpriteJson ennmieJson : datas.getEnnemis()) {
             Sprite sprite = (Sprite) Class.forName(SPRITE_PACKAGE + ennmieJson.getName()).getDeclaredConstructor(Integer.class, Integer.class).newInstance(200, 200);
             ennemies.add(sprite);
         }
 
         player = new Randy(100, 100);
-        background = new Image(IMG_ROOT_PATH + json.getBackGroundImage());
-
+        background = new Image(IMG_ROOT_PATH + datas.getBackGroundImage());
+        tilesImage = ImageUtils.getTilesFromTileset(IMG_ROOT_PATH + datas.getTileSet(), 16, 16);
     }
 
     public List<Sprite> getEnnemies() {
@@ -78,6 +84,10 @@ public class StageMap {
 
     public void setTiles(List<Tile> tiles) {
         this.tiles = tiles;
+    }
+
+    public Map<Point2D, Image> getTilesImage() {
+        return tilesImage;
     }
 
 }

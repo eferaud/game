@@ -11,19 +11,40 @@ package fr.feraud.secretofnina.model.json;
  */
 public class TileJson {
 
-    private Integer id; //numéro dans le tileset
+    private Integer x;
+    private Integer y;
+
+    private Integer px;
+    private Integer py;
     private Boolean p; //collision
     private Boolean t; // gestion tranparence
 
     public TileJson() {
     }
 
-    public Integer getId() {
-        return id;
+    public TileJson(Integer px, Integer py, Integer x, Integer y, Boolean p, Boolean t) {
+        this.x = x;
+        this.y = y;
+        this.p = p;
+        this.t = t;
+        this.px = px;
+        this.py = py;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public Integer getX() {
+        return x;
+    }
+
+    public void setX(Integer x) {
+        this.x = x;
+    }
+
+    public Integer getY() {
+        return y;
+    }
+
+    public void setY(Integer y) {
+        this.y = y;
     }
 
     public Boolean getP() {
@@ -40,6 +61,22 @@ public class TileJson {
 
     public void setT(Boolean t) {
         this.t = t;
+    }
+
+    public Integer getPx() {
+        return px;
+    }
+
+    public void setPx(Integer px) {
+        this.px = px;
+    }
+
+    public Integer getPy() {
+        return py;
+    }
+
+    public void setPy(Integer py) {
+        this.py = py;
     }
 
 }

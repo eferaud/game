@@ -12,23 +12,30 @@ import fr.feraud.secretofnina.view.IRenderer;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Pane;
 
 /**
  * Les Renderer sont stateless
  *
  * @author eric
- * @param <T>
  */
-public abstract class DefaultSpriteRenderer implements IRenderer<Sprite> {
+public abstract class DefaultSpriteRenderer implements IRenderer<Sprite, Canvas> {
 
     private final static Logger LOG = Logger.getLogger(DefaultSpriteRenderer.class.getName());
 
     private final static int FRAME_RATE = 6;
 
     @Override
-    public void render(Sprite player, GraphicsContext graphicsContext) {
+    public Canvas initLayer(Sprite element, Pane parent, int width, int height) {
+        Canvas spriteLayer = new Canvas(width, height);
+        parent.getChildren().add(spriteLayer);
+        return spriteLayer;
+    }
+
+    @Override
+    public void render(Sprite player, Canvas layer) {
         int nbrImage = getMAP().get(player.getDirection()).size();
         if (player.getLoopCounter() == (FRAME_RATE * nbrImage)) {
             player.setLoopCounter(1);
@@ -70,7 +77,7 @@ public abstract class DefaultSpriteRenderer implements IRenderer<Sprite> {
                 reverse = true;
                 break;
         }
-        graphicsContext.drawImage(image, 0, 0, player.getWidth(), player.getHeight(), dx, dy, dw, dh);
+        layer.getGraphicsContext2D().drawImage(image, 0, 0, player.getWidth(), player.getHeight(), dx, dy, dw, dh);
 
         if (player.isCurrentlyMoving()) {
             player.setLoopCounter(player.getLoopCounter() + 1);

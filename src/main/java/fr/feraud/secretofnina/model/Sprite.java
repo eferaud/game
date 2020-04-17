@@ -35,6 +35,7 @@ public abstract class Sprite extends Tile {
     private List<Point2D> clipping;
 
     public Sprite(int width, int height, int lifeIndex) {
+        //Pas de position pour le moment car on a pas de charset @TODO
         super(0, 0, width, height);
         this.velocityX = 0;
         this.velocityY = 0;

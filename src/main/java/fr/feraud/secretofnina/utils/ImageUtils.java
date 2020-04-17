@@ -6,7 +6,9 @@
 package fr.feraud.secretofnina.utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
@@ -76,4 +78,33 @@ public class ImageUtils {
         return wImage;
     }
 
+    public static Map<Point2D, Image> getTilesFromTileset(String tileset, int tileWidth, int tileHeight) {
+        Map<Point2D, Image> tiles = new HashMap<>();
+        Image tilesetImage = new Image(tileset);
+
+        for (int y = 0; y < (int) tileHeight; y++) {
+            for (int x = 0; x < (int) tileWidth; x++) {
+                tiles.put(new Point2D(x, y), getTileFromTileset(tilesetImage, tileWidth, tileHeight, x, y));
+            }
+        }
+
+        return tiles;
+    }
+
+    //Premiere position 0,0
+    public static Image getTileFromTileset(Image tilesetImage, int tileWidth, int tileHeight, int tileX, int tileY) {
+
+        PixelReader pixelReader = tilesetImage.getPixelReader();
+        WritableImage tileImage = new WritableImage(tileWidth, tileHeight);
+        PixelWriter writer = tileImage.getPixelWriter();
+
+        for (int y = 0; y < tileWidth; y++) {
+            for (int x = 0; x < tileHeight; x++) {
+                //Retrieving the color of the pixel of the loaded image
+                Color color = pixelReader.getColor(tileX * tileWidth + x, tileY * tileHeight + y);
+                writer.setColor(x, y, color);
+            }
+        }
+        return tileImage;
+    }
 }
