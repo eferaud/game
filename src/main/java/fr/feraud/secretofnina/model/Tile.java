@@ -28,7 +28,7 @@ public abstract class Tile {
         this.height = height;
     }
 
-    protected void setPosition(int x, int y) {
+    protected void setPosition(double x, double y) {
         this.mapPositionX = x;
         this.mapPositionY = y;
     }

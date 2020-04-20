@@ -24,9 +24,9 @@ import javafx.scene.image.Image;
  */
 public class StageMap {
 
-    private final static String IMG_ROOT_PATH = "file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\";
+    public final static String IMG_ROOT_PATH = "file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\";
     private final static String SPRITE_PACKAGE = "fr.feraud.secretofnina.model.";
-    public final static String MAP1 = "map1.txt";
+    public final static String MAP1 = "test.txt";
 
     private List<Sprite> ennemies;
     private Image background;
@@ -40,7 +40,7 @@ public class StageMap {
         tiles = new ArrayList();
         for (TileJson tileJson : datas.getTiles()) {
             PlainTile t = new PlainTile(tileJson.getX(), tileJson.getY(), 16, 16);
-            t.setPosition(tileJson.getPx(), tileJson.getPy());
+            t.setPosition(tileJson.getPx() * 16, tileJson.getPy() * 16);
             tiles.add(t);
         }
         ennemies = new ArrayList();

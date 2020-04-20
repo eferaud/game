@@ -3,10 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.feraud.secretofnina;
+package fr.feraud.secretofnina.control;
 
-import fr.feraud.secretofnina.control.GameIAEngine;
-import fr.feraud.secretofnina.control.IGameCollisionEngine;
 import fr.feraud.secretofnina.gamepad.GamePadController;
 import fr.feraud.secretofnina.view.GameRenderEngine;
 import javafx.animation.AnimationTimer;
@@ -25,7 +23,7 @@ public class GamePlayLoop extends AnimationTimer {
     private final IGameCollisionEngine gameCollisionEngine;
     private GamePadController gamePadController;
 
-    GamePlayLoop(GameRenderEngine gameRenderEngine, GameIAEngine gameIAEngine, IGameCollisionEngine gameCollisionEngine, GamePadController gamePadController) {
+    public GamePlayLoop(GameRenderEngine gameRenderEngine, GameIAEngine gameIAEngine, IGameCollisionEngine gameCollisionEngine, GamePadController gamePadController) {
         this.gameRenderEngine = gameRenderEngine;
         this.gameIAEngine = gameIAEngine;
         this.gameCollisionEngine = gameCollisionEngine;

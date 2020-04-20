@@ -5,6 +5,7 @@
  */
 package fr.feraud.secretofnina.model.json;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -83,6 +84,50 @@ public class StageMapJson {
 
     public void setBackGroundImage(String backGroundImage) {
         this.backGroundImage = backGroundImage;
+    }
+
+    /**
+     *
+     * @param gx Position x sur la map en pixel
+     * @param gy Position y sur la map en pixel
+     * @return La tuile suivant sa position sur la map en pixel, null si elle
+     * n'existe pas
+     */
+    public TileJson getTile(int gx, int gy) {
+        TileJson search = new TileJson();
+        search.setPx(gx);
+        search.setPy(gy);
+        int index = tiles.indexOf(search);
+        if (index >= 0) {
+            return tiles.get(index);
+        }
+        return null;
+    }
+
+    /**
+     * Ajoute la tile dans la map si elle n'existe pas déjà, ou la met à jour
+     *
+     * @param ut
+     */
+    public void saveOrUpdateTile(TileJson ut) {
+        TileJson search = getTile(ut.getPx(), ut.getPy());
+        if (search != null) {
+            search.copy(ut);
+        } else {
+            tiles.add(ut);
+        }
+    }
+
+    public void removeTile(TileJson tileJson) {
+        if (tileJson != null) {
+            Iterator<TileJson> iter = tiles.iterator();
+            while (iter.hasNext()) {
+                TileJson t = iter.next();
+                if (t != null && t.equals(tileJson)) {
+                    iter.remove();
+                }
+            }
+        }
     }
 
 }

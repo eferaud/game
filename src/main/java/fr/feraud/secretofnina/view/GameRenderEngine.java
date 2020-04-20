@@ -17,7 +17,6 @@ import fr.feraud.secretofnina.view.sprite.RandyRenderer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -40,7 +39,7 @@ public class GameRenderEngine {
     private final static Map<Class, IRenderer> RENDERERS = new HashMap<>();
 
     private final Canvas spriteLayer;
-    private final Node mapLayer;
+    private final Canvas mapLayer;
 
     static {
         RENDERERS.put(Lapin.class, new LapinRenderer());
@@ -60,7 +59,7 @@ public class GameRenderEngine {
         //stage.initStyle(javafx.stage.StageStyle.TRANSPARENT); @TODO à activer à la fin
 
         //Init layer de la MAP
-        this.mapLayer = RENDERERS.get(map.getClass()).initLayer(map, root, applicationParameters.getWidth(), applicationParameters.getHeight());
+        this.mapLayer = (Canvas) RENDERERS.get(map.getClass()).initLayer(map, root, applicationParameters.getWidth(), applicationParameters.getHeight());
         //Init layer des sprites
         this.spriteLayer = (Canvas) RENDERERS.get(map.getPlayer().getClass()).initLayer(map.getPlayer(), root, applicationParameters.getWidth(), applicationParameters.getHeight());
 
@@ -89,6 +88,8 @@ public class GameRenderEngine {
         //Render du joueur
         render(this.map.getPlayer(), time);
 
+        //TODO : gestion du scrolling
+        //context.translate(0.1, 0);
     }
 
     private void render(Sprite element, double time) {
@@ -102,6 +103,18 @@ public class GameRenderEngine {
     public void attachHandler(PlayerEventHandler playerEventHandler) {
         root.setOnKeyPressed(playerEventHandler);
         root.setOnKeyReleased(playerEventHandler);
+    }
+
+    public Canvas getSpriteLayer() {
+        return spriteLayer;
+    }
+
+    public Canvas getMapLayer() {
+        return mapLayer;
+    }
+
+    public Pane getRoot() {
+        return root;
     }
 
 }

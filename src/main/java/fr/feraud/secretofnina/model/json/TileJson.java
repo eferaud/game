@@ -5,6 +5,8 @@
  */
 package fr.feraud.secretofnina.model.json;
 
+import java.util.Objects;
+
 /**
  *
  * @author eric
@@ -22,6 +24,15 @@ public class TileJson {
     public TileJson() {
     }
 
+    /**
+     *
+     * @param px Position sur la MAP en pixel
+     * @param py Position sur la MAP en pixel
+     * @param x Position dans le tileset en nombre
+     * @param y Position dans le tileset en nombre
+     * @param p Engenadre une collision dans le jeu
+     * @param t A du fond transparent
+     */
     public TileJson(Integer px, Integer py, Integer x, Integer y, Boolean p, Boolean t) {
         this.x = x;
         this.y = y;
@@ -77,6 +88,44 @@ public class TileJson {
 
     public void setPy(Integer py) {
         this.py = py;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + Objects.hashCode(this.px);
+        hash = 97 * hash + Objects.hashCode(this.py);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final TileJson other = (TileJson) obj;
+        if (!Objects.equals(this.px, other.px)) {
+            return false;
+        }
+        if (!Objects.equals(this.py, other.py)) {
+            return false;
+        }
+        return true;
+    }
+
+    public void copy(TileJson copy) {
+        this.x = copy.getX();
+        this.y = copy.getY();
+        this.p = copy.getP();
+        this.t = copy.getT();
+        this.px = copy.getPx();
+        this.py = copy.getPy();
     }
 
 }

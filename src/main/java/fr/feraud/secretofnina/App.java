@@ -2,6 +2,7 @@ package fr.feraud.secretofnina;
 
 import fr.feraud.secretofnina.control.GameCollisionEngine;
 import fr.feraud.secretofnina.control.GameIAEngine;
+import fr.feraud.secretofnina.control.GamePlayLoop;
 import fr.feraud.secretofnina.control.IGameCollisionEngine;
 import fr.feraud.secretofnina.control.PlayerEventHandler;
 import fr.feraud.secretofnina.gamepad.GamePadController;

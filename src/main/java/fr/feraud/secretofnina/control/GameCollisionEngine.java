@@ -38,6 +38,7 @@ public class GameCollisionEngine implements IGameCollisionEngine {
 
     private void processCollision(Sprite player, double time) {
         player.update(time);
+
         if (isCollisions(player, time)) {
             player.setInCollision(true);
             player.rollback(time);
@@ -62,7 +63,7 @@ public class GameCollisionEngine implements IGameCollisionEngine {
             }
         }
         for (Tile tile : map.getTiles()) {
-            if (broadCollision(player, tile) && narrowTileCollision(player, tile)) {
+            if (broadCollision(player, tile) && narrowTileCollision(player, tile)) { //@TODO pas la peine defaire narrow si tile est plain
                 return true;
             }
         }
