@@ -9,10 +9,10 @@ package fr.feraud.secretofnina.model;
  *
  * @author eric
  */
-public class PlainTile extends Tile {
+public class FloorTile extends Tile {
 
-    public PlainTile(int tilesetX, int tilesetY, int width, int height, boolean transparency) {
-        super(tilesetX, tilesetY, width, height, true, transparency);
+    public FloorTile(int tilesetX, int tilesetY, int width, int height) {
+        super(tilesetX, tilesetY, width, height, false, false);
     }
 
 }

@@ -11,7 +11,7 @@ import javafx.geometry.Rectangle2D;
  *
  * @author eric
  */
-public abstract class Tile {
+public class Tile {
 
     private final int tilesetX;
     private final int tilesetY;
@@ -20,12 +20,16 @@ public abstract class Tile {
 
     protected double mapPositionX;
     protected double mapPositionY;
+    private final boolean plain;
+    private final boolean transparency;
 
-    public Tile(int tilesetX, int tilesetY, int width, int height) {
+    public Tile(int tilesetX, int tilesetY, int width, int height, boolean plain, boolean transparency) {
         this.tilesetX = tilesetX;
         this.tilesetY = tilesetY;
         this.width = width;
         this.height = height;
+        this.plain = plain;
+        this.transparency = transparency;
     }
 
     protected void setPosition(double x, double y) {
@@ -67,6 +71,14 @@ public abstract class Tile {
      */
     public int getTilesetY() {
         return tilesetY;
+    }
+
+    public boolean isPlain() {
+        return plain;
+    }
+
+    public boolean isTransparency() {
+        return transparency;
     }
 
     @Override

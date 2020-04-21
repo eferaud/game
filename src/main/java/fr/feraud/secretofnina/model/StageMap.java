@@ -26,7 +26,7 @@ public class StageMap {
 
     public final static String IMG_ROOT_PATH = "file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\";
     private final static String SPRITE_PACKAGE = "fr.feraud.secretofnina.model.";
-    public final static String MAP1 = "test.txt";
+    public final static String MAP1 = "open.txt";
 
     private List<Sprite> ennemies;
     private Image background;
@@ -39,14 +39,16 @@ public class StageMap {
         StageMapJson datas = StageMapSerializer.deserialize(mapPath);
         tiles = new ArrayList();
         for (TileJson tileJson : datas.getTiles()) {
-            PlainTile t = new PlainTile(tileJson.getX(), tileJson.getY(), 16, 16);
+            Tile t = new Tile(tileJson.getX(), tileJson.getY(), 16, 16, tileJson.getP(), tileJson.getT());
             t.setPosition(tileJson.getPx() * 16, tileJson.getPy() * 16);
             tiles.add(t);
         }
         ennemies = new ArrayList();
-        for (SpriteJson ennmieJson : datas.getEnnemis()) {
-            Sprite sprite = (Sprite) Class.forName(SPRITE_PACKAGE + ennmieJson.getName()).getDeclaredConstructor(Integer.class, Integer.class).newInstance(200, 200);
-            ennemies.add(sprite);
+        if (datas.getEnnemis() != null) {
+            for (SpriteJson ennmieJson : datas.getEnnemis()) {
+                Sprite sprite = (Sprite) Class.forName(SPRITE_PACKAGE + ennmieJson.getName()).getDeclaredConstructor(Integer.class, Integer.class).newInstance(200, 200);
+                ennemies.add(sprite);
+            }
         }
 
         player = new Randy(100, 100);

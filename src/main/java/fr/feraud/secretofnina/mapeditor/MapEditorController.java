@@ -37,6 +37,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 /**
  *
@@ -63,6 +66,9 @@ public class MapEditorController implements Initializable {
     @FXML
     private MenuBar menuBar;
 
+    @FXML
+    private TextFlow textFlow;
+
     private Image selectedTile;
 
     private Point2D selectedTilePosition;
@@ -70,6 +76,8 @@ public class MapEditorController implements Initializable {
     private StageMapJson datas;
 
     private Map<Point2D, Image> mapTiles;
+    private boolean lastTrasparency;
+    private boolean lastPlain;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -174,6 +182,7 @@ public class MapEditorController implements Initializable {
                         Rectangle rec = new Rectangle(32, 32); //On utilise pas TILE_SIZE, car ça nique tout l'affichage
                         rec.setFill(new ImagePattern(mapTiles.get(point2D)));
                         rec.setStroke(Color.BLACK);
+                        rec.setStrokeType(StrokeType.INSIDE);
                         tilesetPane.add(rec, (int) point2D.getX(), (int) point2D.getY());
 
                         rec.setOnMouseClicked(e -> {
@@ -200,11 +209,13 @@ public class MapEditorController implements Initializable {
             for (int x = 0; x < numCols; x++) {
                 Rectangle rec = new Rectangle(TILE_SIZE, TILE_SIZE);
                 rec.setStroke(Color.BLACK);
+                rec.setStrokeType(StrokeType.INSIDE);
                 TileJson tileJson = datas.getTile(x, y);
                 if (tileJson != null) {
                     rec.setFill(new ImagePattern(mapTiles.get(new Point2D(tileJson.getX(), tileJson.getY()))));
                     if (tileJson.getP()) { //si plain, on encadre en rouge
                         rec.setStroke(Color.RED);
+                        rec.setStrokeType(StrokeType.INSIDE);
                     }
                     if (tileJson.getT()) { //si transparent, on entour en pointillet
                         rec.setOpacity(0.5);
@@ -244,6 +255,7 @@ public class MapEditorController implements Initializable {
 
                     int cx = getCx(e);
                     int cy = getCy(e);
+
                     Rectangle rct2 = getNodeByRowColumnIndex(cy, cx, tilesPane);
                     if (null != e.getButton()) {
                         switch (e.getButton()) {
@@ -254,9 +266,9 @@ public class MapEditorController implements Initializable {
                                 if (metaCombo.getSelectionModel().getSelectedItem().equals("tile")) {
                                     eraseCase(cx, cy, rct2);
                                 } else if (metaCombo.getSelectionModel().getSelectedItem().equals("transparency")) {
-                                    setTransparency(cx, cy, rct2, true);
+                                    setTransparency(cx, cy, rct2, lastTrasparency);
                                 } else if (metaCombo.getSelectionModel().getSelectedItem().equals("collision")) {
-                                    setPlain(cx, cy, rct2, true);
+                                    setPlain(cx, cy, rct2, lastPlain);
                                 }
                                 break;
                             default:
@@ -264,6 +276,16 @@ public class MapEditorController implements Initializable {
                         }
                     }
                 });
+
+                rec.setOnMouseMoved(e -> {
+                    int cx = getCx(e);
+                    int cy = getCy(e);
+
+                    textFlow.getChildren().clear();
+                    textFlow.getChildren().add(new Text(cx + " x " + cy));
+                    textFlow.getChildren().add(new Text("    //    " + e.getSceneX() + " x " + (e.getSceneY() - 23)));
+                });
+
             }
         }
 
@@ -316,7 +338,7 @@ public class MapEditorController implements Initializable {
     private void fillCase(int cx, int cy, Rectangle rec) {
         LOG.log(Level.INFO, "fill case {0}x{1}", new Object[]{cx, cy});
         rec.setFill(new ImagePattern(selectedTile));
-        TileJson tileJson = new TileJson(cx, cy, (int) selectedTilePosition.getX(), (int) selectedTilePosition.getY(), Boolean.TRUE, Boolean.FALSE);
+        TileJson tileJson = new TileJson(cx, cy, (int) selectedTilePosition.getX(), (int) selectedTilePosition.getY(), Boolean.FALSE, Boolean.FALSE);
         datas.saveOrUpdateTile(tileJson);
     }
 
@@ -324,6 +346,7 @@ public class MapEditorController implements Initializable {
         LOG.log(Level.INFO, "clear case {0}.{1}", new Object[]{cx, cy});
         rec.setFill(Color.WHITE);
         rec.setStroke(Color.GRAY);
+        rec.setStrokeType(StrokeType.INSIDE);
         rec.setOpacity(1);
         TileJson tileJson = new TileJson(cx, cy, 0, 0, Boolean.TRUE, Boolean.FALSE);
         datas.removeTile(tileJson);
@@ -332,14 +355,16 @@ public class MapEditorController implements Initializable {
     private void switchPlain(int cx, int cy, Rectangle rec) {
         TileJson tileJson = datas.getTile(cx, cy);
         if (tileJson != null) {
-            setPlain(cx, cy, rec, !tileJson.getP());
+            lastPlain = !tileJson.getP();
+            setPlain(cx, cy, rec, lastPlain);
         }
     }
 
     private void switchTransparency(int cx, int cy, Rectangle rec) {
         TileJson tileJson = datas.getTile(cx, cy);
         if (tileJson != null) {
-            setTransparency(cx, cy, rec, !tileJson.getT());
+            lastTrasparency = !tileJson.getT();
+            setTransparency(cx, cy, rec, lastTrasparency);
         }
     }
 
@@ -347,7 +372,7 @@ public class MapEditorController implements Initializable {
         TileJson tileJson = datas.getTile(cx, cy);
         if (tileJson != null) {
             tileJson.setP(plain);
-
+            rec.setStrokeType(StrokeType.INSIDE);
             if (tileJson.getP()) { //si plain, on encadre en rouge
                 rec.setStroke(Color.RED);
             } else {

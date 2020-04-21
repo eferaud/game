@@ -63,11 +63,18 @@ public class GameCollisionEngine implements IGameCollisionEngine {
             }
         }
         for (Tile tile : map.getTiles()) {
-            if (broadCollision(player, tile) && narrowTileCollision(player, tile)) { //@TODO pas la peine defaire narrow si tile est plain
-                return true;
+            //On ne prend que les tuile pleine (collision)
+            if (tile.isPlain()) {
+                if (broadCollision(player, tile)) { //cas d'une collision large
+                    if (!tile.isTransparency()) { //Si non transparent, pas la peine de tester plus fin
+                        return true;
+                    } else if (narrowTileCollision(player, tile)) { //Si transparent et collision étroite
+                        return true;
+                    }
+                }
             }
-        }
 
+        }
         return false;
     }
 
