@@ -82,7 +82,7 @@ public class MapEditorController implements Initializable {
     }
 
     @FXML
-    private void handleMenuAction(ActionEvent event) {
+    public void handleMenuAction(ActionEvent event) {
         LOG.info(((MenuItem) event.getTarget()).getId());
 
         switch (((MenuItem) event.getTarget()).getId()) {
@@ -91,6 +91,9 @@ public class MapEditorController implements Initializable {
                 break;
             case "open":
                 open();
+                break;
+            case "new":
+                initialize(null, null);
                 break;
         }
     }
@@ -105,13 +108,13 @@ public class MapEditorController implements Initializable {
         assert tilesetPane != null : "fx:id=\"tilesetCombo\" was not injected: check your FXML file 'editor.fxml'.";
         List<String> list = new ArrayList<>();
         list.add("tileset1.png");
-        list.add("tileset2.png");
-        list.add("tileset3.png");
+        list.add("tileset4.png");
         ObservableList obList = FXCollections.observableList(list);
 
         tilesetCombo.setItems(obList);
         selectedTile = null;
         selectedTilePosition = null;
+        tilesetPane.getChildren().clear();
 
         //selectedTileset.textProperty().bind(tilesetCombo.getSelectionModel().selectedItemProperty());
         // listen for changes to the fruit combo box selection and update the displayed fruit image accordingly.
@@ -223,38 +226,22 @@ public class MapEditorController implements Initializable {
     }
 
     private void save() {
-
         try {
-            datas.setName("test.txt");
             StageMapSerializer.serialize(datas);
         } catch (IOException ex) {
             Logger.getLogger(MapEditorController.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        /* List<TileJson> tiles = new ArrayList<>();
-        datas.setTiles(tiles);
-
-        ObservableList<Node> childrens = tilesPane.getChildren();
-
-        for (Node node : childrens) {
-            if (node != null && node instanceof Rectangle) {
-                int px = GridPane.getColumnIndex(node) * TILE_SIZE / 2;
-                int py = GridPane.getRowIndex(node) * TILE_SIZE / 2;
-                TileJson tileJson = new TileJson(px, py, nbrX, nbrY, Boolean.TRUE, Boolean.FALSE);
-                datas.saveOrUpdateTile(tileJson);
-            }
-        }*/
     }
 
     private void fillCase(int cx, int cy, Rectangle rec) {
-        LOG.info("fill case " + cx + "." + cy);
+        LOG.log(Level.INFO, "fill case {0}x{1}", new Object[]{cx, cy});
         rec.setFill(new ImagePattern(selectedTile));
         TileJson tileJson = new TileJson(cx, cy, (int) selectedTilePosition.getX(), (int) selectedTilePosition.getY(), Boolean.TRUE, Boolean.FALSE);
         datas.saveOrUpdateTile(tileJson);
     }
 
     private void eraseCase(int cx, int cy, Rectangle rec) {
-        LOG.info("clear case " + cx + "." + cy);
+        LOG.log(Level.INFO, "clear case {0}.{1}", new Object[]{cx, cy});
         rec.setFill(Color.WHITE);
         TileJson tileJson = new TileJson(cx, cy, 0, 0, Boolean.TRUE, Boolean.FALSE);
         datas.removeTile(tileJson);

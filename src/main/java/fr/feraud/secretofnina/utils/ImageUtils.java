@@ -82,8 +82,15 @@ public class ImageUtils {
         Map<Point2D, Image> tiles = new HashMap<>();
         Image tilesetImage = new Image(tileset);
 
-        for (int y = 0; y < (int) tileHeight; y++) {
-            for (int x = 0; x < (int) tileWidth; x++) {
+        if (tilesetImage.getWidth() % tileWidth > 0) {
+            throw new RuntimeException("L'image tileset n'a pas une largeur multiple de " + tileWidth);
+        }
+        if (tilesetImage.getHeight() % tileHeight > 0) {
+            throw new RuntimeException("L'image tileset n'a pas une hauteur multiple de " + tileHeight);
+        }
+
+        for (int y = 0; y < (tilesetImage.getHeight() / tileHeight); y++) {
+            for (int x = 0; x < (tilesetImage.getWidth() / tileWidth); x++) {
                 tiles.put(new Point2D(x, y), getTileFromTileset(tilesetImage, tileWidth, tileHeight, x, y));
             }
         }
@@ -91,8 +98,24 @@ public class ImageUtils {
         return tiles;
     }
 
-    //Premiere position 0,0
+    /**
+     * @param tilesetImage L'image du tileset
+     * @param tileWidth la largeur du tile
+     * @param tileHeight La hauteur du tile
+     * @param tileX La position X du tile à récupérer dans le tileset (commence
+     * par 0)
+     * @param tileY La position Y du tile à récupérer dans le tileset (commence
+     * par 0)
+     * @return
+     */
     public static Image getTileFromTileset(Image tilesetImage, int tileWidth, int tileHeight, int tileX, int tileY) {
+
+        if (tilesetImage.getWidth() % tileWidth > 0) {
+            throw new RuntimeException("L'image tileset n'a pas une largeur multiple de " + tileWidth);
+        }
+        if (tilesetImage.getHeight() % tileHeight > 0) {
+            throw new RuntimeException("L'image tileset n'a pas une hauteur multiple de " + tileHeight);
+        }
 
         PixelReader pixelReader = tilesetImage.getPixelReader();
         WritableImage tileImage = new WritableImage(tileWidth, tileHeight);
@@ -101,7 +124,7 @@ public class ImageUtils {
         for (int y = 0; y < tileWidth; y++) {
             for (int x = 0; x < tileHeight; x++) {
                 //Retrieving the color of the pixel of the loaded image
-                Color color = pixelReader.getColor(tileX * tileWidth + x, tileY * tileHeight + y);
+                Color color = pixelReader.getColor(tileX * tileWidth + x, tileY * tileHeight + y); //176, 0
                 writer.setColor(x, y, color);
             }
         }

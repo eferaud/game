@@ -1,0 +1,202 @@
+{
+  "name": "new.txt",
+  "tileSet": "tileset4.png",
+  "width": 100,
+  "height": 100,
+  "tiles": [
+    {
+      "x": 0,
+      "y": 5,
+      "px": 0,
+      "py": 0,
+      "p": true,
+      "t": false
+    },
+    {
+      "x": 1,
+      "y": 5,
+      "px": 1,
+      "py": 0,
+      "p": true,
+      "t": false
+    },
+    {
+      "x": 2,
+      "y": 5,
+      "px": 2,
+      "py": 0,
+      "p": true,
+      "t": false
+    },
+    {
+      "x": 3,
+      "y": 5,
+      "px": 3,
+      "py": 0,
+      "p": true,
+      "t": false
+    },
+    {
+      "x": 0,
+      "y": 6,
+      "px": 0,
+      "py": 1,
+      "p": true,
+      "t": false
+    },
+    {
+      "x": 0,
+      "y": 6,
+      "px": 0,
+      "py": 2,
+      "p": true,
+      "t": false
+    },
+    {
+      "x": 0,
+      "y": 7,
+      "px": 0,
+      "py": 3,
+      "p": true,
+      "t": false
+    },
+    {
+      "x": 1,
+      "y": 7,
+      "px": 1,
+      "py": 3,
+      "p": true,
+      "t": false
+    },
+    {
+      "x": 2,
+      "y": 7,
+      "px": 2,
+      "py": 3,
+      "p": true,
+      "t": false
+    },
+    {
+      "x": 3,
+      "y": 7,
+      "px": 3,
+      "py": 3,
+      "p": true,
+      "t": false
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "px": 3,
+      "py": 2,
+      "p": true,
+      "t": false
+    },
+    {
+      "x": 3,
+      "y": 6,
+      "px": 3,
+      "py": 1,
+      "p": true,
+      "t": false
+    },
+    {
+      "x": 1,
+      "y": 6,
+      "px": 1,
+      "py": 1,
+      "p": true,
+      "t": false
+    },
+    {
+      "x": 1,
+      "y": 6,
+      "px": 2,
+      "py": 1,
+      "p": true,
+      "t": false
+    },
+    {
+      "x": 1,
+      "y": 6,
+      "px": 2,
+      "py": 2,
+      "p": true,
+      "t": false
+    },
+    {
+      "x": 1,
+      "y": 6,
+      "px": 1,
+      "py": 2,
+      "p": true,
+      "t": false
+    },
+    {
+      "x": 0,
+      "y": 8,
+      "px": 6,
+      "py": 5,
+      "p": true,
+      "t": false
+    },
+    {
+      "x": 1,
+      "y": 8,
+      "px": 7,
+      "py": 5,
+      "p": true,
+      "t": false
+    },
+    {
+      "x": 0,
+      "y": 9,
+      "px": 6,
+      "py": 6,
+      "p": true,
+      "t": false
+    },
+    {
+      "x": 1,
+      "y": 9,
+      "px": 7,
+      "py": 6,
+      "p": true,
+      "t": false
+    },
+    {
+      "x": 0,
+      "y": 10,
+      "px": 6,
+      "py": 7,
+      "p": true,
+      "t": false
+    },
+    {
+      "x": 1,
+      "y": 10,
+      "px": 8,
+      "py": 7,
+      "p": true,
+      "t": false
+    },
+    {
+      "x": 0,
+      "y": 11,
+      "px": 6,
+      "py": 8,
+      "p": true,
+      "t": false
+    },
+    {
+      "x": 1,
+      "y": 11,
+      "px": 7,
+      "py": 8,
+      "p": true,
+      "t": false
+    }
+  ],
+  "ennemis": null,
+  "backGroundImage": null
+}

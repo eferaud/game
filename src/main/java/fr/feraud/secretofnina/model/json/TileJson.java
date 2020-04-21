@@ -26,8 +26,8 @@ public class TileJson {
 
     /**
      *
-     * @param px Position sur la MAP en pixel
-     * @param py Position sur la MAP en pixel
+     * @param px Position sur la MAP en grile de 16x16
+     * @param py Position sur la MAP en grile de 16x16
      * @param x Position dans le tileset en nombre
      * @param y Position dans le tileset en nombre
      * @param p Engenadre une collision dans le jeu
