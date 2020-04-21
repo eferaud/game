@@ -124,7 +124,7 @@ public class ImageUtils {
         for (int y = 0; y < tileWidth; y++) {
             for (int x = 0; x < tileHeight; x++) {
                 //Retrieving the color of the pixel of the loaded image
-                Color color = pixelReader.getColor(tileX * tileWidth + x, tileY * tileHeight + y); //176, 0
+                Color color = pixelReader.getColor(tileX * tileWidth + x, tileY * tileHeight + y);
                 writer.setColor(x, y, color);
             }
         }

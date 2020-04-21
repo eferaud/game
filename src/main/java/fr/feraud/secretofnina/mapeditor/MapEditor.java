@@ -14,9 +14,9 @@ public class MapEditor extends Application {
 
         Parent root = FXMLLoader.load(this.getClass().getResource("editor.fxml"));
 
-        Scene scene = new Scene(root, 800, 600);
+        Scene scene = new Scene(root, 1768, 992);
 
-        stage.setTitle("FXML Welcome");
+        stage.setTitle("Map Editor");
         stage.setScene(scene);
         stage.show();
 
