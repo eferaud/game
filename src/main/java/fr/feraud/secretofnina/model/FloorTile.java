@@ -9,6 +9,7 @@ package fr.feraud.secretofnina.model;
  *
  * @author eric
  */
+@Deprecated
 public class FloorTile extends Tile {
 
     public FloorTile(int tilesetX, int tilesetY, int width, int height) {

@@ -53,8 +53,8 @@ public class GameRenderEngine {
         root.setBackground(Background.EMPTY);
 
         //one container of Nodes that compose one “page” of your application
-        Scene theScene = new Scene(root, Color.BLACK);
-        stage.setScene(theScene);
+        Scene scene = new Scene(root, Color.BLACK);
+        stage.setScene(scene);
         stage.setTitle("SecretOfNina " + applicationParameters.getWidth() + "X" + applicationParameters.getHeight());
         //stage.initStyle(javafx.stage.StageStyle.TRANSPARENT); @TODO à activer à la fin
 
@@ -87,7 +87,12 @@ public class GameRenderEngine {
         });
         //Render du joueur
         render(this.map.getPlayer(), time);
+        //taille de la fenetre
+//root.getWidth() 640
+//root.getHeight() 480
 
+        //double viewportMinX = (scrollPaneMap.getContent().getBoundsInLocal().getWidth() - scrollPaneMap.getWidth()) * scrollPaneMap.getHvalue();
+        //double cx = ((e.getSceneX() + viewportMinX) / (double) TILE_SIZE);
         //TODO : gestion du scrolling
         //context.translate(0.1, 0);
     }

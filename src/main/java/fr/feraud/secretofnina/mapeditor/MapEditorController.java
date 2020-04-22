@@ -30,6 +30,7 @@ import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -64,10 +65,16 @@ public class MapEditorController implements Initializable {
     private GridPane tilesPane;
 
     @FXML
+    private ScrollPane scrollPaneMap;
+
+    @FXML
     private MenuBar menuBar;
 
     @FXML
     private TextFlow textFlow;
+
+    @FXML
+    private Text coordTxt;
 
     private Image selectedTile;
 
@@ -280,10 +287,7 @@ public class MapEditorController implements Initializable {
                 rec.setOnMouseMoved(e -> {
                     int cx = getCx(e);
                     int cy = getCy(e);
-
-                    textFlow.getChildren().clear();
-                    textFlow.getChildren().add(new Text(cx + " x " + cy));
-                    textFlow.getChildren().add(new Text("    //    " + e.getSceneX() + " x " + (e.getSceneY() - 23)));
+                    coordTxt.setText(cx + " x " + cy);
                 });
 
             }
@@ -291,12 +295,22 @@ public class MapEditorController implements Initializable {
 
     }
 
-    public static int getCx(MouseEvent e) {
-        return (int) (e.getSceneX() / TILE_SIZE);
+    /**
+     * e.getSceneX() : ce qu'on voit dans la fenetre
+     *
+     * @param e
+     * @return
+     */
+    public int getCx(MouseEvent e) {
+        double viewportMinX = (scrollPaneMap.getContent().getBoundsInLocal().getWidth() - scrollPaneMap.getWidth()) * scrollPaneMap.getHvalue();
+        double cx = ((e.getSceneX() + viewportMinX) / (double) TILE_SIZE);
+
+        return (int) cx;
     }
 
-    public static int getCy(MouseEvent e) {
-        return (int) ((e.getSceneY() - 23) / TILE_SIZE);
+    public int getCy(MouseEvent e) {
+        double viewportMinY = (scrollPaneMap.getContent().getBoundsInLocal().getHeight() - scrollPaneMap.getHeight()) * scrollPaneMap.getVvalue();
+        return (int) (viewportMinY + e.getSceneY() - 23) / TILE_SIZE;
     }
 
     public static Rectangle getNodeByRowColumnIndex(final int y, final int x, GridPane pane) {
@@ -318,6 +332,7 @@ public class MapEditorController implements Initializable {
         LOG.info("open()");
         try {
             datas = StageMapSerializer.deserialize("open.txt");
+            textFlow.getChildren().add(new Text("\n Ouverture fichier"));
         } catch (IOException ex) {
             Logger.getLogger(MapEditorController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -340,6 +355,7 @@ public class MapEditorController implements Initializable {
         rec.setFill(new ImagePattern(selectedTile));
         TileJson tileJson = new TileJson(cx, cy, (int) selectedTilePosition.getX(), (int) selectedTilePosition.getY(), Boolean.FALSE, Boolean.FALSE);
         datas.saveOrUpdateTile(tileJson);
+        textFlow.getChildren().add(new Text("\n (+) Tile " + (int) selectedTilePosition.getX() + " " + (int) selectedTilePosition.getY() + " à la positon " + cx + "x" + cy));
     }
 
     private void eraseCase(int cx, int cy, Rectangle rec) {
@@ -350,6 +366,8 @@ public class MapEditorController implements Initializable {
         rec.setOpacity(1);
         TileJson tileJson = new TileJson(cx, cy, 0, 0, Boolean.TRUE, Boolean.FALSE);
         datas.removeTile(tileJson);
+
+        textFlow.getChildren().add(new Text("\n (-) Tile à la positon " + cx + "x" + cy));
     }
 
     private void switchPlain(int cx, int cy, Rectangle rec) {
@@ -378,6 +396,7 @@ public class MapEditorController implements Initializable {
             } else {
                 rec.setStroke(Color.BLACK);
             }
+            textFlow.getChildren().add(new Text("\n (M) Tile plain:" + plain + " à la positon " + cx + "x" + cy));
         }
     }
 
@@ -391,6 +410,7 @@ public class MapEditorController implements Initializable {
             } else {
                 rec.setOpacity(1);
             }
+            textFlow.getChildren().add(new Text("\n (M) Tile transparency:" + transparency + " à la positon " + cx + "x" + cy));
         }
     }
 

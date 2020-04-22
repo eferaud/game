@@ -31,10 +31,10 @@ public class DefaultMapRenderer implements IRenderer<StageMap, Canvas> {
 
     @Override
     public Canvas initLayer(StageMap stage, Pane parent, int width, int height) {
-        Canvas backGroundLayer = new Canvas(width, height);
-        backGroundLayer.getGraphicsContext2D().setFill(new ImagePattern(stage.getBackground()));
-        parent.getChildren().add(backGroundLayer);
-        return backGroundLayer;
+        Canvas layer = new Canvas(width, height);
+        layer.getGraphicsContext2D().setFill(new ImagePattern(stage.getBackground()));
+        parent.getChildren().add(layer);
+        return layer;
     }
 
     private void render(Canvas layer, StageMap stage, Tile tile, double time) {

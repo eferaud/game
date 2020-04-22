@@ -9,6 +9,7 @@ package fr.feraud.secretofnina.model;
  *
  * @author eric
  */
+@Deprecated
 public class PlainTile extends Tile {
 
     public PlainTile(int tilesetX, int tilesetY, int width, int height, boolean transparency) {

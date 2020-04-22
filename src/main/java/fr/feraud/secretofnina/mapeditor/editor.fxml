@@ -6,12 +6,14 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 <?import javafx.scene.text.TextFlow?>
 
 <VBox focusTraversable="true" onKeyTyped="#handleKeyTyped" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fr.feraud.secretofnina.mapeditor.MapEditorController">
@@ -34,7 +36,7 @@
         </MenuBar>
         <HBox focusTraversable="true" VBox.vgrow="ALWAYS">
             <children>
-                <ScrollPane>
+                <ScrollPane fx:id="scrollPaneMap">
                     <content>
                         <AnchorPane focusTraversable="true" prefHeight="768.0" prefWidth="1024.0">
                             <children>
@@ -56,7 +58,7 @@
                             <children>
                                 <VBox focusTraversable="true">
                                     <children>
-                                        <ComboBox fx:id="tilesetCombo" focusTraversable="false" promptText="Tileset" prefWidth="150.0"/>
+                                        <ComboBox fx:id="tilesetCombo" focusTraversable="false" prefWidth="150.0" promptText="Tileset" />
                                         <ComboBox fx:id="metaCombo" prefWidth="150.0" promptText="Meta" />
                                         <GridPane fx:id="tilesetPane" accessibleRole="BUTTON" focusTraversable="true" gridLinesVisible="true">
                                             <columnConstraints>
@@ -82,6 +84,19 @@
                 </ScrollPane>
             </children>
         </HBox>
-        <TextFlow fx:id="textFlow" prefHeight="100.0" />
+      <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
+        <items>
+            <Text fx:id="coordTxt" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+            <ScrollPane prefHeight="200.0" prefWidth="200.0">
+              <content>
+                <AnchorPane>
+                     <children>
+                          <TextFlow fx:id="textFlow" prefHeight="100.0" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </ScrollPane>
+        </items>
+      </SplitPane>
     </children>
 </VBox>
