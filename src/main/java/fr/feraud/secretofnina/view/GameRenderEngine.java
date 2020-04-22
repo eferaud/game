@@ -84,10 +84,10 @@ public class GameRenderEngine {
         GraphicsContext mapContext = mapLayer.getGraphicsContext2D();
 
         //Réinit du layer des sprites
-        spitesContext.clearRect(0, 0, spriteLayer.getWidth(), spriteLayer.getHeight());
+        spitesContext.clearRect(gameCamera.getOffsetX(), gameCamera.getOffsetY(), gameCamera.getWidth(), gameCamera.getHeight());
 
         //Réinit du layer de la map
-        mapContext.clearRect(0, 0, mapLayer.getWidth(), mapLayer.getHeight());
+        mapContext.clearRect(gameCamera.getOffsetX(), gameCamera.getOffsetY(), gameCamera.getWidth(), gameCamera.getHeight());
 
         //Render de la map
         render(this.map, time);
@@ -101,13 +101,6 @@ public class GameRenderEngine {
 
         processScrolling();
 
-        //taille de la fenetre
-//root.getWidth() 640
-//root.getHeight() 480
-        //double viewportMinX = (scrollPaneMap.getContent().getBoundsInLocal().getWidth() - scrollPaneMap.getWidth()) * scrollPaneMap.getHvalue();
-        //double cx = ((e.getSceneX() + viewportMinX) / (double) TILE_SIZE);
-        //TODO : gestion du scrolling
-        //context.translate(0.1, 0);
     }
 
     private void render(Sprite element, double time) {
@@ -147,7 +140,7 @@ public class GameRenderEngine {
 
         //Translation droite
         //Si position sur la mapX du player > (positionX de la camera + la largeur de la camera /2)
-        if (canScrollRight && this.map.getPlayer().getMapPositionX() > (gameCamera.getOffsetX() + 3 * gameCamera.getWidth() / 4)) {
+        if (canScrollRight && this.map.getPlayer().getMapPositionX() > (gameCamera.getOffsetX() + gameCamera.getWidth() * (1d - GameCamera.SCROLL_TRIGGER_THRESHOLD))) {
             spitesContext.translate(-3, 0);
             mapContext.translate(-3, 0);
             gameCamera.translateX(3);
@@ -155,21 +148,21 @@ public class GameRenderEngine {
 
         //Translation gauche
         //Si position sur la mapX du player < (positionX de la camera + la largeur de la camera /2)
-        if (canScrollLeft && this.map.getPlayer().getMapPositionX() < (gameCamera.getOffsetX() + gameCamera.getWidth() / 4)) {
+        if (canScrollLeft && this.map.getPlayer().getMapPositionX() < (gameCamera.getOffsetX() + gameCamera.getWidth() * GameCamera.SCROLL_TRIGGER_THRESHOLD)) {
             spitesContext.translate(3, 0);
             mapContext.translate(3, 0);
             gameCamera.translateX(-3);
         }
 
         //Translation bas
-        if (canScrollDown && this.map.getPlayer().getMapPositionY() > (gameCamera.getOffsetY() + 3 * gameCamera.getHeight() / 4)) {
+        if (canScrollDown && this.map.getPlayer().getMapPositionY() > (gameCamera.getOffsetY() + gameCamera.getHeight() * (1d - GameCamera.SCROLL_TRIGGER_THRESHOLD))) {
             spitesContext.translate(0, -3);
             mapContext.translate(0, -3);
             gameCamera.translateY(3);
         }
 
         //Translation haut
-        if (canScrollUp && this.map.getPlayer().getMapPositionY() < (gameCamera.getOffsetY() + gameCamera.getHeight() / 4)) {
+        if (canScrollUp && this.map.getPlayer().getMapPositionY() < (gameCamera.getOffsetY() + gameCamera.getHeight() * GameCamera.SCROLL_TRIGGER_THRESHOLD)) {
             spitesContext.translate(0, 3);
             mapContext.translate(0, 3);
             gameCamera.translateY(-3);

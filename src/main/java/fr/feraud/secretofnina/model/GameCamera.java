@@ -13,6 +13,9 @@ import javafx.geometry.Rectangle2D;
  */
 public class GameCamera {
 
+    //Seuil relatif à la boite de la caméra (boundary) au délà duquel le scroll se déclenche
+    public final static double SCROLL_TRIGGER_THRESHOLD = 1d / 4d;
+
     //Position haut gauche
     private double offsetX;
     private double offsetY;
