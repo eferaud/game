@@ -5,6 +5,7 @@
  */
 package fr.feraud.secretofnina.control;
 
+import fr.feraud.secretofnina.model.GameCamera;
 import fr.feraud.secretofnina.model.Sprite;
 import fr.feraud.secretofnina.model.StageMap;
 import fr.feraud.secretofnina.model.Tile;
@@ -18,10 +19,12 @@ public class GameCollisionEngine implements IGameCollisionEngine {
 
     private final static Logger LOG = Logger.getLogger(GameCollisionEngine.class.getName());
     private final StageMap map;
+    private GameCamera gameCamera;
 
-    public GameCollisionEngine(StageMap map) {
+    public GameCollisionEngine(StageMap map, GameCamera gameCamera) {
         LOG.info("GameCollisionEngine");
         this.map = map;
+        this.gameCamera = gameCamera;
     }
 
     /**
@@ -62,7 +65,7 @@ public class GameCollisionEngine implements IGameCollisionEngine {
                 }
             }
         }
-        for (Tile tile : map.getTiles()) {
+        for (Tile tile : map.getTiles(this.gameCamera)) {
             //On ne prend que les tuile pleine (collision)
             if (tile.isPlain()) {
                 if (broadCollision(player, tile)) { //cas d'une collision large
@@ -73,8 +76,13 @@ public class GameCollisionEngine implements IGameCollisionEngine {
                     }
                 }
             }
-
         }
+
+        //check depassement de la map
+        if (!gameCamera.getBoundary().contains(player.getBoundary())) {
+            return true;
+        }
+
         return false;
     }
 

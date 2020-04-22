@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javafx.geometry.Point2D;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
 
 /**
@@ -33,6 +34,9 @@ public class StageMap {
     private Sprite player;
     private List<Tile> tiles;
     private final Map<Point2D, Image> tilesImage;
+
+    private int width;
+    private int height;
 
     public StageMap(String mapPath) throws IOException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 
@@ -54,6 +58,9 @@ public class StageMap {
         player = new Randy(100, 100);
         background = new Image(IMG_ROOT_PATH + datas.getBackGroundImage());
         tilesImage = ImageUtils.getTilesFromTileset(IMG_ROOT_PATH + datas.getTileSet(), 16, 16);
+
+        width = datas.getWidth() * 16;
+        height = datas.getHeight() * 16;
     }
 
     public List<Sprite> getEnnemies() {
@@ -80,16 +87,25 @@ public class StageMap {
         this.player = player;
     }
 
-    public List<Tile> getTiles() {
-        return tiles;
-    }
-
-    public void setTiles(List<Tile> tiles) {
-        this.tiles = tiles;
+    public List<Tile> getTiles(GameCamera camera) {
+        Rectangle2D camBoundary = camera.getBoundary();
+        List<Tile> visibleTiles = new ArrayList<>();
+        tiles.stream().filter((tile) -> (camBoundary.intersects(tile.getBoundary()))).forEachOrdered((tile) -> {
+            visibleTiles.add(tile);
+        });
+        return visibleTiles;
     }
 
     public Map<Point2D, Image> getTilesImage() {
         return tilesImage;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 
 }

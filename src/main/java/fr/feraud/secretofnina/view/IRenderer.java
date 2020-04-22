@@ -5,6 +5,7 @@
  */
 package fr.feraud.secretofnina.view;
 
+import fr.feraud.secretofnina.model.GameCamera;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
@@ -18,6 +19,6 @@ public interface IRenderer<T, L extends Node> {
 
     public void render(T element, L layer);
 
-    public L initLayer(T element, Pane parent, int width, int height);
+    public L initLayer(T element, GameCamera gameCamera, Pane parent, int width, int height);
 
 }

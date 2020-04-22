@@ -6,6 +6,7 @@
 package fr.feraud.secretofnina.view.sprite;
 
 import fr.feraud.secretofnina.model.DirectionEnum;
+import fr.feraud.secretofnina.model.GameCamera;
 import fr.feraud.secretofnina.model.Sprite;
 import fr.feraud.secretofnina.utils.ImageUtils;
 import fr.feraud.secretofnina.view.IRenderer;
@@ -28,7 +29,7 @@ public abstract class DefaultSpriteRenderer implements IRenderer<Sprite, Canvas>
     private final static int FRAME_RATE = 6;
 
     @Override
-    public Canvas initLayer(Sprite element, Pane parent, int width, int height) {
+    public Canvas initLayer(Sprite element, GameCamera gameCamera, Pane parent, int width, int height) {
         Canvas spriteLayer = new Canvas(width, height);
         parent.getChildren().add(spriteLayer);
         return spriteLayer;

@@ -5,6 +5,7 @@
  */
 package fr.feraud.secretofnina.view.map;
 
+import fr.feraud.secretofnina.model.GameCamera;
 import fr.feraud.secretofnina.model.StageMap;
 import fr.feraud.secretofnina.model.Tile;
 import fr.feraud.secretofnina.view.IRenderer;
@@ -21,23 +22,27 @@ import javafx.scene.paint.ImagePattern;
  */
 public class DefaultMapRenderer implements IRenderer<StageMap, Canvas> {
 
+    private GameCamera gameCamera;
+
     @Override
     public void render(StageMap stage, Canvas layer) {
-        for (Tile tile : stage.getTiles()) {
-            render(layer, stage, tile, 0);
+        for (Tile tile : stage.getTiles(gameCamera)) {
+            render(layer, stage, tile);
         }
 
     }
 
     @Override
-    public Canvas initLayer(StageMap stage, Pane parent, int width, int height) {
+    public Canvas initLayer(StageMap stage, GameCamera gameCamera, Pane parent, int width, int height) {
+        this.gameCamera = gameCamera;
         Canvas layer = new Canvas(width, height);
         layer.getGraphicsContext2D().setFill(new ImagePattern(stage.getBackground()));
         parent.getChildren().add(layer);
+
         return layer;
     }
 
-    private void render(Canvas layer, StageMap stage, Tile tile, double time) {
+    private void render(Canvas layer, StageMap stage, Tile tile) {
         Image tileImage = stage.getTilesImage().get(new Point2D(tile.getTilesetX(), tile.getTilesetY()));
         layer.getGraphicsContext2D().drawImage(tileImage, 0, 0, tileImage.getWidth(), tileImage.getHeight(), tile.getMapPositionX(), tile.getMapPositionY(), tileImage.getWidth(), tileImage.getHeight());
     }
