@@ -22,6 +22,29 @@ import javafx.scene.paint.Color;
  */
 public class ImageUtils {
 
+    public static Image flipImage(Image image) {
+
+        //Creating a writable image
+        WritableImage wImage = new WritableImage((int) image.getWidth(), (int) image.getHeight());
+
+        //Reading color from the loaded image
+        PixelReader pixelReader = image.getPixelReader();
+
+        //getting the pixel writer
+        PixelWriter writer = wImage.getPixelWriter();
+
+        //Reading the color of the image
+        for (int y = 0; y < (int) image.getHeight(); y++) {
+            for (int x = 0; x < (int) image.getWidth(); x++) {
+                //Retrieving the color of the pixel of the loaded image
+                Color color = pixelReader.getColor(x, y);
+
+                writer.setColor((int) image.getWidth() - x - 1, y, color);
+            }
+        }
+        return wImage;
+    }
+
     //TODO : mettre un système de cache mémoire (id image -> List<Point2D> détourrés)
     //Comme ça il n'y a plus à faire la translation reserve ou pas
     public static List<Point2D> getClipping(Image image, double tx, double ty, boolean reverse) {
@@ -91,7 +114,7 @@ public class ImageUtils {
 
         for (int y = 0; y < (tilesetImage.getHeight() / tileHeight); y++) {
             for (int x = 0; x < (tilesetImage.getWidth() / tileWidth); x++) {
-                tiles.put(new Point2D(x, y), getTileFromTileset(tilesetImage, tileWidth, tileHeight, x, y));
+                tiles.put(new Point2D(x, y), getTileFromTileset(tilesetImage, tileWidth, tileHeight, x, y, 0, 0));
             }
         }
 
@@ -99,32 +122,49 @@ public class ImageUtils {
     }
 
     /**
+     *
+     * @param tilesetImage L'image du tileset
+     * @param offsetX Point x de démarrage de la sous image
+     * @param offsetY Point y de démarrage de la sous image
+     * @param tileWidth Largeur du tile
+     * @param tileHeight Hauteur du tile
+     * @param nbrTilesX Nbr de tile sur l'axe X
+     * @param nbrTilesY Nbr de tile sur l'axe y
+     * @return Map de point relatif à la sous image ie premier point 0x0
+     */
+    public static Map<Point2D, Image> getSubTilesFromTileset(Image tilesetImage, int offsetX, int offsetY, int tileWidth, int tileHeight, int nbrTilesX, int nbrTilesY) {
+        Map<Point2D, Image> tiles = new HashMap<>();
+
+        for (int y = 0; y < nbrTilesY; y++) {
+            for (int x = 0; x < nbrTilesX; x++) {
+                tiles.put(new Point2D(x, y), getTileFromTileset(tilesetImage, tileWidth, tileHeight, x, y, offsetX, offsetY));
+            }
+        }
+        return tiles;
+    }
+
+    /**
      * @param tilesetImage L'image du tileset
      * @param tileWidth la largeur du tile
      * @param tileHeight La hauteur du tile
-     * @param tileX La position X du tile à récupérer dans le tileset (commence
-     * par 0)
-     * @param tileY La position Y du tile à récupérer dans le tileset (commence
-     * par 0)
+     * @param tileX La position X du tile à récupérer dans le tileset (pas en
+     * pixel, commence à 0)
+     * @param tileY La position Y du tile à récupérer dans le tileset (pas en
+     * pixel, commence à 0)
+     * @param offsetX Position X du pixel de départ
+     * @param offsetY Position Y du pixel de départ
      * @return
      */
-    public static Image getTileFromTileset(Image tilesetImage, int tileWidth, int tileHeight, int tileX, int tileY) {
-
-        if (tilesetImage.getWidth() % tileWidth > 0) {
-            throw new RuntimeException("L'image tileset n'a pas une largeur multiple de " + tileWidth);
-        }
-        if (tilesetImage.getHeight() % tileHeight > 0) {
-            throw new RuntimeException("L'image tileset n'a pas une hauteur multiple de " + tileHeight);
-        }
+    public static Image getTileFromTileset(Image tilesetImage, int tileWidth, int tileHeight, int tileX, int tileY, int offsetX, int offsetY) {
 
         PixelReader pixelReader = tilesetImage.getPixelReader();
         WritableImage tileImage = new WritableImage(tileWidth, tileHeight);
         PixelWriter writer = tileImage.getPixelWriter();
 
-        for (int y = 0; y < tileWidth; y++) {
-            for (int x = 0; x < tileHeight; x++) {
+        for (int y = 0; y < tileHeight; y++) {
+            for (int x = 0; x < tileWidth; x++) {
                 //Retrieving the color of the pixel of the loaded image
-                Color color = pixelReader.getColor(tileX * tileWidth + x, tileY * tileHeight + y);
+                Color color = pixelReader.getColor(tileX * tileWidth + x + offsetX, tileY * tileHeight + y + offsetY);
                 writer.setColor(x, y, color);
             }
         }

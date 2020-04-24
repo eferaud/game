@@ -17,10 +17,13 @@ import java.util.Map;
 import javafx.scene.image.Image;
 
 /**
+ * 31 x 27
+ *
+ * 1110 x 37 -> 186 x 27 (6 sprites) : walk left
  *
  * @author eric
  */
-public class RandyRenderer extends DefaultSpriteRenderer {
+public class TotoRenderer extends DefaultSpriteRenderer {
 
     private final static String PATH = "file:D:\\DEV\\workspace\\SecretOfNina\\src\\resources\\charset\\Elfe.png";
     private final static int WIDTH = 30;
@@ -37,12 +40,12 @@ public class RandyRenderer extends DefaultSpriteRenderer {
         CONFIG.put(MovementTypeEnum.ATTACK, new Segment(8, 3));
     }
 
-    public RandyRenderer() {
+    public TotoRenderer() {
         for (MovementTypeEnum movementType : CONFIG.keySet()) {
             for (DirectionEnum direction : DirectionEnum.values()) {
                 SpriteEvent spriteEvent = new SpriteEvent(direction, movementType);
                 List<Image> images = getImages(spriteEvent);
-                if (DIR2REVERSE.equals(direction)) {
+                if (direction.name().contains(DIR2REVERSE.name())) {
                     MAP.put(spriteEvent, reverse(images));
                 } else {
                     MAP.put(spriteEvent, images);
@@ -54,7 +57,7 @@ public class RandyRenderer extends DefaultSpriteRenderer {
     private List<Image> getImages(SpriteEvent spriteEvent) {
         Segment segment = CONFIG.get(spriteEvent.getMovementType());
         int offsetX = segment.getBegin() * WIDTH;
-        int offsetY = 0;
+        int offsetY = getOffsetY(spriteEvent.getDirection()) * HEIGHT;
         int nbrTilesX = segment.getLength();
         return new ArrayList<>(ImageUtils.getSubTilesFromTileset(tilesetImage, offsetX, offsetY, WIDTH, HEIGHT, nbrTilesX, 1).values());
     }
@@ -73,4 +76,22 @@ public class RandyRenderer extends DefaultSpriteRenderer {
     public Map<SpriteEvent, List<Image>> getMAP() {
         return MAP;
     }
+
+    private int getOffsetY(DirectionEnum direction) {
+        switch (direction) {
+            case LEFT:
+            case DOWN_LEFT:
+            case UP_LEFT:
+            case RIGHT:
+            case UP_RIGHT:
+            case DOWN_RIGHT:
+                return 1;
+            case DOWN:
+                return 2;
+            case UP:
+                return 3;
+        }
+        return 0;
+    }
+
 }

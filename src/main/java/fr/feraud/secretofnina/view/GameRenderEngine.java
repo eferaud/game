@@ -12,9 +12,11 @@ import fr.feraud.secretofnina.model.Lapin;
 import fr.feraud.secretofnina.model.Randy;
 import fr.feraud.secretofnina.model.Sprite;
 import fr.feraud.secretofnina.model.StageMap;
+import fr.feraud.secretofnina.model.Toto;
 import fr.feraud.secretofnina.view.map.DefaultMapRenderer;
 import fr.feraud.secretofnina.view.sprite.LapinRenderer;
 import fr.feraud.secretofnina.view.sprite.RandyRenderer;
+import fr.feraud.secretofnina.view.sprite.TotoRenderer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -48,6 +50,7 @@ public class GameRenderEngine {
     static {
         RENDERERS.put(Lapin.class, new LapinRenderer());
         RENDERERS.put(Randy.class, new RandyRenderer());
+        RENDERERS.put(Toto.class, new TotoRenderer());
 
         RENDERERS.put(StageMap.class, new DefaultMapRenderer());
     }

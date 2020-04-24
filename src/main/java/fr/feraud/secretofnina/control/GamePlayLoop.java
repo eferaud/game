@@ -21,7 +21,7 @@ public class GamePlayLoop extends AnimationTimer {
     private final static int FRAME_RATE = 60;
     private final GameIAEngine gameIAEngine;
     private final IGameCollisionEngine gameCollisionEngine;
-    private GamePadController gamePadController;
+    private final GamePadController gamePadController;
 
     public GamePlayLoop(GameRenderEngine gameRenderEngine, GameIAEngine gameIAEngine, IGameCollisionEngine gameCollisionEngine, GamePadController gamePadController) {
         this.gameRenderEngine = gameRenderEngine;

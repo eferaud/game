@@ -24,7 +24,6 @@ public class GamePadController {
 
     private final static Logger LOG = Logger.getLogger(GamePadController.class.getName());
 
-    private GamePadEventHandler eventHandler;
     private Controller controller;
     private final Sprite player;
 
@@ -50,19 +49,18 @@ public class GamePadController {
         EventQueue queue = controller.getEventQueue();
 
         Event event = new Event();
-
         while (queue.getNextEvent(event)) {
             Component comp = event.getComponent();
             float value = event.getValue();
-            if (!comp.getName().equals("Commande de pouce")) {
+            if (comp.getName().equals("Bouton 0")) {
                 if (value == 1.0f) {
-                    //buffer.append("On");
+                    player.move(player.getSpriteEvent().getDirection(), MovementTypeEnum.ATTACK);
                 } else {
                     // buffer.append("Off");
                 }
-            } else {
+            } else if (comp.getName().equals("Commande de pouce")) {
                 if (value == 0.0f) {
-                    player.move(player.getDirection(), MovementTypeEnum.STOPED);
+                    player.move(player.getSpriteEvent().getDirection(), MovementTypeEnum.STOPED);
                 } else if (value == 0.5f) {
                     player.move(DirectionEnum.RIGHT, MovementTypeEnum.WALK);
                 } else if (value == 1.0f) {

@@ -27,8 +27,13 @@ public abstract class Sprite extends Tile {
     //Nbr de point de dégat pris
     private int hitsIndex;
 
-    private DirectionEnum direction = DirectionEnum.DOWN;
-    private MovementTypeEnum movementType = MovementTypeEnum.STOPED;
+    private final SpriteEvent spriteEvent = new SpriteEvent(DirectionEnum.DOWN, MovementTypeEnum.STOPED);
+    private SpriteEvent previousSpriteEvent = new SpriteEvent(DirectionEnum.DOWN, MovementTypeEnum.STOPED);
+    private boolean eventChanged = false;
+    //le sprite est en train de faire uen action qui déroule des animation
+    //on bloque toute commande
+    private SpriteStatusEnum status = SpriteStatusEnum.STAND;
+
     //MAJ uniquement dans la méthode render
     private int loopCounter = 0;
     private boolean inCollision = false;
@@ -62,14 +67,6 @@ public abstract class Sprite extends Tile {
     public void rollback(double time) {
         this.mapPositionX -= this.velocityX * time;
         this.mapPositionY -= this.velocityY * time;
-    }
-
-    public DirectionEnum getDirection() {
-        return direction;
-    }
-
-    public MovementTypeEnum getMovementType() {
-        return movementType;
     }
 
     public int getLoopCounter() {
@@ -109,53 +106,69 @@ public abstract class Sprite extends Tile {
     }
 
     public void move(DirectionEnum direction, MovementTypeEnum movementType) {
-        if (direction != null) {
-            //System.out.println("move : " + movementType + " " + direction);
-            this.direction = direction;
-            this.movementType = movementType;
+        //On bloque toute commande si le sprite est dans une animation
+        if (!status.isAnimated()) {
+            spriteEvent.setDirection(direction);
+            spriteEvent.setMovementType(movementType);
 
-            //Cas demande direction
-            this.velocityX = 0;
-            this.velocityY = 0;
-            if (!movementType.equals(MovementTypeEnum.STOPED)) {
-                switch (direction) {
-                    case RIGHT:
-                        this.velocityX = VELOCITY;
-                        break;
-                    case LEFT:
-                        this.velocityX = -VELOCITY;
-                        break;
-                    case UP:
-                        this.velocityY = -VELOCITY;
-                        break;
-                    case DOWN:
-                        this.velocityY = VELOCITY;
-                        break;
-                    case UP_RIGHT:
-                        this.velocityY = -VELOCITY;
-                        this.velocityX = VELOCITY;
-                        break;
-                    case UP_LEFT:
-                        this.velocityY = -VELOCITY;
-                        this.velocityX = -VELOCITY;
-                        break;
-                    case DOWN_LEFT:
-                        this.velocityY = VELOCITY;
-                        this.velocityX = -VELOCITY;
-                        break;
-                    case DOWN_RIGHT:
-                        this.velocityY = VELOCITY;
-                        this.velocityX = VELOCITY;
-                        break;
+            //Changement d'event
+            if (!previousSpriteEvent.equals(spriteEvent)) {
+                eventChanged = true;
+            } else {
+                eventChanged = false;
+            }
+            previousSpriteEvent.setDirection(spriteEvent.getDirection());
+            previousSpriteEvent.setMovementType(spriteEvent.getMovementType());
+
+            if (direction != null) {
+                //Cas demande direction
+                this.velocityX = 0;
+                this.velocityY = 0;
+                if (MovementTypeEnum.WALK.equals(movementType) || MovementTypeEnum.RUN.equals(movementType)) {
+                    status = SpriteStatusEnum.WALKING; //@TODO prévoir le cas RUN
+                    switch (direction) {
+                        case RIGHT:
+                            this.velocityX = VELOCITY;
+                            break;
+                        case LEFT:
+                            this.velocityX = -VELOCITY;
+                            break;
+                        case UP:
+                            this.velocityY = -VELOCITY;
+                            break;
+                        case DOWN:
+                            this.velocityY = VELOCITY;
+                            break;
+                        case UP_RIGHT:
+                            this.velocityY = -VELOCITY;
+                            this.velocityX = VELOCITY;
+                            break;
+                        case UP_LEFT:
+                            this.velocityY = -VELOCITY;
+                            this.velocityX = -VELOCITY;
+                            break;
+                        case DOWN_LEFT:
+                            this.velocityY = VELOCITY;
+                            this.velocityX = -VELOCITY;
+                            break;
+                        case DOWN_RIGHT:
+                            this.velocityY = VELOCITY;
+                            this.velocityX = VELOCITY;
+                            break;
+                    }
                 }
             }
+            if (MovementTypeEnum.STOPED.equals(movementType) && velocityY == 0 && velocityX == 0) { //@TODO utile de tester la vélocité ?
+                currentlyMoving = false;
+                status = SpriteStatusEnum.STAND;
+            } else {
+                currentlyMoving = true;
+            }
+
+            if (MovementTypeEnum.ATTACK.equals(movementType)) {
+                status = SpriteStatusEnum.ATTACK;
+            }
         }
-        if (movementType != null && movementType.equals(MovementTypeEnum.STOPED) && velocityY == 0 && velocityX == 0) {
-            currentlyMoving = false;
-        } else {
-            currentlyMoving = true;
-        }
-        //System.out.println("loopCounter = " + loopCounter);
     }
 
     public void eraseVelocity() {
@@ -169,6 +182,26 @@ public abstract class Sprite extends Tile {
 
     public List<Point2D> getClipping() {
         return clipping;
+    }
+
+    public SpriteEvent getSpriteEvent() {
+        return spriteEvent;
+    }
+
+    public boolean isEventChanged() {
+        return eventChanged;
+    }
+
+    public void setEventChanged(boolean eventChanged) {
+        this.eventChanged = eventChanged;
+    }
+
+    public SpriteStatusEnum getStatus() {
+        return status;
+    }
+
+    public void setStatus(SpriteStatusEnum status) {
+        this.status = status;
     }
 
 }

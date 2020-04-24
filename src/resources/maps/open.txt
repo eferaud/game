@@ -9501,12 +9501,5 @@
       "t": false
     }
   ],
-  "ennemis": [
-    {
-      "name": "Lapin",
-      "x": 200,
-      "y": 200
-    }
-  ],
   "backGroundImage": "background.png"
 }

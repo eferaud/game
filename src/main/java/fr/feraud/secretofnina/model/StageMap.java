@@ -55,7 +55,7 @@ public class StageMap {
             }
         }
 
-        player = new Randy(100, 100);
+        player = new Toto(100, 100);
         background = new Image(IMG_ROOT_PATH + datas.getBackGroundImage());
         tilesImage = ImageUtils.getTilesFromTileset(IMG_ROOT_PATH + datas.getTileSet(), 16, 16);
 

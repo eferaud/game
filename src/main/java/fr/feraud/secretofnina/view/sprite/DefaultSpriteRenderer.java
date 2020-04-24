@@ -5,9 +5,11 @@
  */
 package fr.feraud.secretofnina.view.sprite;
 
-import fr.feraud.secretofnina.model.DirectionEnum;
 import fr.feraud.secretofnina.model.GameCamera;
+import fr.feraud.secretofnina.model.MovementTypeEnum;
 import fr.feraud.secretofnina.model.Sprite;
+import fr.feraud.secretofnina.model.SpriteEvent;
+import fr.feraud.secretofnina.model.SpriteStatusEnum;
 import fr.feraud.secretofnina.utils.ImageUtils;
 import fr.feraud.secretofnina.view.IRenderer;
 import java.util.List;
@@ -37,16 +39,32 @@ public abstract class DefaultSpriteRenderer implements IRenderer<Sprite, Canvas>
 
     @Override
     public void render(Sprite player, Canvas layer) {
-        int nbrImage = getMAP().get(player.getDirection()).size();
-        if (player.getLoopCounter() == (FRAME_RATE * nbrImage)) {
+        int nbrImage = getMAP().get(player.getSpriteEvent()).size();
+
+        //Si changement de mouvement ou arret de tout mouvement, on repasse au loop compteur 1
+        if (player.isEventChanged() || player.getSpriteEvent().getMovementType().equals(MovementTypeEnum.STOPED)) {
             player.setLoopCounter(1);
-        } else if ((player.getLoopCounter() < FRAME_RATE) && player.isCurrentlyMoving()) { //éviter l'effet de glissement
-            player.setLoopCounter(FRAME_RATE);
+            player.setEventChanged(false);
+        } else {
+            if (player.getLoopCounter() == (FRAME_RATE * nbrImage)) {
+                player.setLoopCounter(1);
+            } else if ((player.getLoopCounter() < FRAME_RATE) && player.isCurrentlyMoving()) { //éviter l'effet de glissement
+                player.setLoopCounter(FRAME_RATE);
+            }
         }
 
         int imageNumber = player.getLoopCounter() / FRAME_RATE;
 
-        Image image = getMAP().get(player.getDirection()).get(imageNumber);
+        System.out.println(player.getSpriteEvent() + "  ====> IMG " + imageNumber + " changed:" + player.isEventChanged());
+        Image image = getMAP().get(player.getSpriteEvent()).get(imageNumber); //Attack sur nbr 3
+
+        //Si le player était en action d'animation et qu'on arrive à la fin
+        //On le rebascule en arret et on stoppe le statut acting
+        if (player.getStatus().isAnimated() && imageNumber == (nbrImage - 1)) {
+            player.setStatus(SpriteStatusEnum.STAND);
+            player.move(player.getSpriteEvent().getDirection(), MovementTypeEnum.STOPED);
+            player.setLoopCounter(1);
+        }
 
         //@param dx the destination rectangle's X coordinate position.
         double dx = player.getMapPositionX();
@@ -60,24 +78,6 @@ public abstract class DefaultSpriteRenderer implements IRenderer<Sprite, Canvas>
         //@param dh the destination rectangle's height.
         double dh = player.getHeight();
 
-        boolean reverse = false;
-        switch (player.getDirection()) {
-            case LEFT:
-                dw = -dw;
-                dx = dx - dw;
-                reverse = true;
-                break;
-            case UP_LEFT:
-                dw = -dw;
-                dx = dx - dw;
-                reverse = true;
-                break;
-            case DOWN_LEFT:
-                dw = -dw;
-                dx = dx - dw;
-                reverse = true;
-                break;
-        }
         layer.getGraphicsContext2D().drawImage(image, 0, 0, player.getWidth(), player.getHeight(), dx, dy, dw, dh);
 
         if (player.isCurrentlyMoving()) {
@@ -86,9 +86,9 @@ public abstract class DefaultSpriteRenderer implements IRenderer<Sprite, Canvas>
             player.setLoopCounter(0);
         }
 
-        player.setClipping(ImageUtils.getClipping(image, player.getMapPositionX(), player.getMapPositionY(), reverse));
+        player.setClipping(ImageUtils.getClipping(image, player.getMapPositionX(), player.getMapPositionY(), false));
     }
 
-    public abstract Map<DirectionEnum, List<Image>> getMAP();
+    public abstract Map<SpriteEvent, List<Image>> getMAP();
 
 }
