@@ -40,13 +40,13 @@ public abstract class DefaultSpriteRenderer implements IRenderer<Sprite, Canvas>
         int nbrImage = getMAP().get(player.getSpriteEvent()).size();
 
         if (player.getLoopCounter() >= (FRAME_RATE * nbrImage)) {
-            player.setLoopCounter(1);
+            player.eraseCounter();
             if (player.getStatus().isAnimated()) {
                 //On arrete l'animation à la fin du cycle
                 player.notifyEndAnimation();
             }
         } else {
-            player.setLoopCounter(player.getLoopCounter() + 1);
+            player.incrementLoop();
         }
 
         int imageNumber = player.getLoopCounter() / FRAME_RATE;

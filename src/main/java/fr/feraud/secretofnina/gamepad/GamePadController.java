@@ -54,13 +54,13 @@ public class GamePadController {
             float value = event.getValue();
             if (comp.getName().equals("Bouton 0")) {
                 if (value == 1.0f) {
-                    player.move(player.getSpriteEvent().getDirection(), MovementTypeEnum.ATTACK);
+                    player.move(null, MovementTypeEnum.ATTACK);
                 } else {
                     // buffer.append("Off");
                 }
             } else if (comp.getName().equals("Commande de pouce")) {
                 if (value == 0.0f) {
-                    player.move(player.getSpriteEvent().getDirection(), MovementTypeEnum.STOPED);
+                    player.move(null, MovementTypeEnum.STOPED);
                 } else if (value == 0.5f) {
                     player.move(DirectionEnum.RIGHT, MovementTypeEnum.WALK);
                 } else if (value == 1.0f) {

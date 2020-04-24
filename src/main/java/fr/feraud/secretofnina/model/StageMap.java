@@ -32,11 +32,11 @@ public class StageMap {
     private List<Sprite> ennemies;
     private Image background;
     private Sprite player;
-    private List<Tile> tiles;
+    private final List<Tile> tiles;
     private final Map<Point2D, Image> tilesImage;
 
-    private int width;
-    private int height;
+    private final int width;
+    private final int height;
 
     public StageMap(String mapPath) throws IOException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
 

@@ -13,7 +13,7 @@ import javafx.geometry.Point2D;
  *
  * @author eric
  */
-public abstract class Sprite extends Tile {
+public abstract class Sprite extends Tile implements ICollisible {
 
     private final static double VELOCITY = 0.10d;
 
@@ -27,9 +27,11 @@ public abstract class Sprite extends Tile {
     private int hitsIndex;
 
     private final SpriteEvent spriteEvent = new SpriteEvent(DirectionEnum.DOWN, MovementTypeEnum.STOPED);
+    private final SpriteEvent prevSpriteEvent = new SpriteEvent(DirectionEnum.DOWN, MovementTypeEnum.STOPED);
     //le sprite est en train de faire uen action qui déroule des animation
     //on bloque toute commande
     private SpriteStatusEnum status = SpriteStatusEnum.STAND;
+    private SpriteStatusEnum prevStatus = SpriteStatusEnum.STAND;
 
     //MAJ uniquement dans la méthode render
     private int loopCounter = 0;
@@ -42,24 +44,6 @@ public abstract class Sprite extends Tile {
         this.velocityX = 0;
         this.velocityY = 0;
         this.hitsIndex = 0;
-    }
-
-    public void update(double time) {
-        this.mapPositionX += this.velocityX * time;
-        this.mapPositionY += this.velocityY * time;
-    }
-
-    public void rollback(double time) {
-        this.mapPositionX -= this.velocityX * time;
-        this.mapPositionY -= this.velocityY * time;
-    }
-
-    public int getLoopCounter() {
-        return loopCounter;
-    }
-
-    public void setLoopCounter(int loopCounter) {
-        this.loopCounter = loopCounter;
     }
 
     public int getLifeIndex() {
@@ -82,24 +66,152 @@ public abstract class Sprite extends Tile {
         return inCollision;
     }
 
+    /**
+     * Uniquement utilisable par le GameCollision engine
+     *
+     * @param time
+     */
+    @Override
+    public void update(double time) {
+        this.mapPositionX += this.velocityX * time;
+        this.mapPositionY += this.velocityY * time;
+    }
+
+    /**
+     * Uniquement utilisable par le GameCollision engine
+     *
+     * @param time
+     */
+    @Override
+    public void rollback(double time) {
+        this.mapPositionX -= this.velocityX * time;
+        this.mapPositionY -= this.velocityY * time;
+    }
+
+    /**
+     * Uniquement utilisable par le moteur de collision
+     *
+     * @param inCollision
+     */
+    @Override
     public void setInCollision(boolean inCollision) {
         this.inCollision = inCollision;
     }
 
     /**
+     * Uniquement utilisable par le moteur de collision
+     */
+    @Override
+    public void eraseVelocity() {
+        this.velocityX = 0;
+        this.velocityY = 0;
+    }
+
+    /**
+     * Uniquement utilisable par le moteur de collision
      *
-     * @param direction Ne doit pas être null
-     * @param movementType Ne doit pas être null
+     * @return
+     */
+    @Override
+    public List<Point2D> getClipping() {
+        return clipping;
+    }
+
+    /**
+     * Uniquement pour la couche render
+     *
+     * @return
+     */
+    public SpriteStatusEnum getStatus() {
+        return status;
+    }
+
+    /**
+     * Uniquement pour la couche render
+     *
+     * @return
+     */
+    public int getLoopCounter() {
+        return loopCounter;
+    }
+
+    /**
+     * Uniquement pour la couche render
+     */
+    public void incrementLoop() {
+        loopCounter = loopCounter + 1;
+    }
+
+    /**
+     * Uniquement pour la couche render
+     */
+    public void eraseCounter() {
+        loopCounter = 0;
+    }
+
+    /**
+     * Uniquement pour la couche render
+     *
+     * @param clipping
+     */
+    public void setClipping(List<Point2D> clipping) {
+        this.clipping = clipping;
+    }
+
+    /**
+     * Uniquement pour la couche render
+     *
+     * @return
+     */
+    public SpriteEvent getSpriteEvent() {
+        return spriteEvent;
+    }
+
+    /**
+     * Uniquement pour la couche render
+     */
+    public void notifyEndAnimation() {
+
+        status = prevStatus;
+        spriteEvent.setMovementType(prevSpriteEvent.getMovementType()); //@FIXME que si pas reçu le message stop
+        eraseCounter();
+        System.out.println("notifyEndAnimation status->" + status + " MovementType->" + spriteEvent.getMovementType());
+
+        move(spriteEvent.getDirection(), spriteEvent.getMovementType());
+    }
+
+    /**
+     * Uniquement par le controlleur du joueur ou l'IA
+     *
+     * @param direction Si null, on garde l'ancienne direction
+     * @param movementType Si null on garde l'ancien mouvement
      */
     public void move(DirectionEnum direction, MovementTypeEnum movementType) {
         System.out.println(direction + " " + movementType);
 
         eraseVelocity();
 
+        //Cas d'une animation et relachement du pavé directionnel
+        if (status.isAnimated() && MovementTypeEnum.STOPED.equals(movementType)) {
+            prevSpriteEvent.setMovementType(MovementTypeEnum.STOPED);
+            prevStatus = SpriteStatusEnum.STAND;
+        }
+
         //On bloque toute commande si le sprite est dans une animation
         if (!status.isAnimated()) {
-            spriteEvent.setDirection(direction);
-            spriteEvent.setMovementType(movementType);
+            prevSpriteEvent.setDirection(spriteEvent.getDirection());
+            prevSpriteEvent.setMovementType(spriteEvent.getMovementType());
+            if (direction != null) {
+                spriteEvent.setDirection(direction);
+            }
+            if (movementType != null) {
+                spriteEvent.setMovementType(movementType);
+            }
+
+            //Cas d'un arret
+            if (MovementTypeEnum.STOPED.equals(movementType)) {
+                eraseCounter();
+            }
 
             //Cas demande direction
             if (MovementTypeEnum.WALK.equals(movementType) || MovementTypeEnum.RUN.equals(movementType)) {
@@ -112,32 +224,8 @@ public abstract class Sprite extends Tile {
         }
     }
 
-    public void eraseVelocity() {
-        this.velocityX = 0;
-        this.velocityY = 0;
-    }
-
-    public void setClipping(List<Point2D> clipping) {
-        this.clipping = clipping;
-    }
-
-    public List<Point2D> getClipping() {
-        return clipping;
-    }
-
-    public SpriteEvent getSpriteEvent() {
-        return spriteEvent;
-    }
-
-    public SpriteStatusEnum getStatus() {
-        return status;
-    }
-
-    public void setStatus(SpriteStatusEnum status) {
-        this.status = status;
-    }
-
     private void processWalk(DirectionEnum direction) {
+        prevStatus = status;
         status = SpriteStatusEnum.WALKING; //@TODO prévoir le cas RUN
         switch (direction) {
             case RIGHT:
@@ -172,11 +260,9 @@ public abstract class Sprite extends Tile {
     }
 
     private void processAttack() {
+        prevStatus = status;
+        eraseCounter();
         status = SpriteStatusEnum.ATTACK;
     }
 
-    public void notifyEndAnimation() {
-        status = SpriteStatusEnum.STAND;
-        spriteEvent.setMovementType(MovementTypeEnum.STOPED);
-    }
 }
