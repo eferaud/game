@@ -6,10 +6,8 @@
 package fr.feraud.secretofnina.view.sprite;
 
 import fr.feraud.secretofnina.model.GameCamera;
-import fr.feraud.secretofnina.model.MovementTypeEnum;
 import fr.feraud.secretofnina.model.Sprite;
 import fr.feraud.secretofnina.model.SpriteEvent;
-import fr.feraud.secretofnina.model.SpriteStatusEnum;
 import fr.feraud.secretofnina.utils.ImageUtils;
 import fr.feraud.secretofnina.view.IRenderer;
 import java.util.List;
@@ -41,31 +39,26 @@ public abstract class DefaultSpriteRenderer implements IRenderer<Sprite, Canvas>
     public void render(Sprite player, Canvas layer) {
         int nbrImage = getMAP().get(player.getSpriteEvent()).size();
 
-        //Si changement de mouvement ou arret de tout mouvement, on repasse au loop compteur 1
-        if (player.isEventChanged() || player.getSpriteEvent().getMovementType().equals(MovementTypeEnum.STOPED)) {
+        if (player.getLoopCounter() >= (FRAME_RATE * nbrImage)) {
             player.setLoopCounter(1);
-            player.setEventChanged(false);
-        } else {
-            if (player.getLoopCounter() == (FRAME_RATE * nbrImage)) {
-                player.setLoopCounter(1);
-            } else if ((player.getLoopCounter() < FRAME_RATE) && player.isCurrentlyMoving()) { //éviter l'effet de glissement
-                player.setLoopCounter(FRAME_RATE);
+            if (player.getStatus().isAnimated()) {
+                //On arrete l'animation à la fin du cycle
+                player.notifyEndAnimation();
             }
+        } else {
+            player.setLoopCounter(player.getLoopCounter() + 1);
         }
 
         int imageNumber = player.getLoopCounter() / FRAME_RATE;
 
-        System.out.println(player.getSpriteEvent() + "  ====> IMG " + imageNumber + " changed:" + player.isEventChanged());
-        Image image = getMAP().get(player.getSpriteEvent()).get(imageNumber); //Attack sur nbr 3
+        Image image = getMAP().get(player.getSpriteEvent()).get(imageNumber % nbrImage);
+        internalRender(player, layer, image);
 
-        //Si le player était en action d'animation et qu'on arrive à la fin
-        //On le rebascule en arret et on stoppe le statut acting
-        if (player.getStatus().isAnimated() && imageNumber == (nbrImage - 1)) {
-            player.setStatus(SpriteStatusEnum.STAND);
-            player.move(player.getSpriteEvent().getDirection(), MovementTypeEnum.STOPED);
-            player.setLoopCounter(1);
-        }
+        player.setClipping(ImageUtils.getClipping(image, player.getMapPositionX(), player.getMapPositionY(), false));
 
+    }
+
+    private void internalRender(Sprite player, Canvas layer, Image image) {
         //@param dx the destination rectangle's X coordinate position.
         double dx = player.getMapPositionX();
 
@@ -79,16 +72,7 @@ public abstract class DefaultSpriteRenderer implements IRenderer<Sprite, Canvas>
         double dh = player.getHeight();
 
         layer.getGraphicsContext2D().drawImage(image, 0, 0, player.getWidth(), player.getHeight(), dx, dy, dw, dh);
-
-        if (player.isCurrentlyMoving()) {
-            player.setLoopCounter(player.getLoopCounter() + 1);
-        } else {
-            player.setLoopCounter(0);
-        }
-
-        player.setClipping(ImageUtils.getClipping(image, player.getMapPositionX(), player.getMapPositionY(), false));
     }
 
     public abstract Map<SpriteEvent, List<Image>> getMAP();
-
 }

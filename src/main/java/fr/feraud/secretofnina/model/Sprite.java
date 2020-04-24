@@ -19,7 +19,6 @@ public abstract class Sprite extends Tile {
 
     private double velocityX;
     private double velocityY;
-    boolean currentlyMoving = false;
 
     //Nbr de point de vie au max
     private int lifeIndex;
@@ -28,8 +27,6 @@ public abstract class Sprite extends Tile {
     private int hitsIndex;
 
     private final SpriteEvent spriteEvent = new SpriteEvent(DirectionEnum.DOWN, MovementTypeEnum.STOPED);
-    private SpriteEvent previousSpriteEvent = new SpriteEvent(DirectionEnum.DOWN, MovementTypeEnum.STOPED);
-    private boolean eventChanged = false;
     //le sprite est en train de faire uen action qui déroule des animation
     //on bloque toute commande
     private SpriteStatusEnum status = SpriteStatusEnum.STAND;
@@ -45,18 +42,6 @@ public abstract class Sprite extends Tile {
         this.velocityX = 0;
         this.velocityY = 0;
         this.hitsIndex = 0;
-    }
-
-    @Deprecated
-    public void setVelocity(int x, int y) {
-        this.velocityX = x;
-        this.velocityY = y;
-    }
-
-    @Deprecated
-    public void addVelocity(int x, int y) {
-        this.velocityX += x;
-        this.velocityY += y;
     }
 
     public void update(double time) {
@@ -93,10 +78,6 @@ public abstract class Sprite extends Tile {
         this.hitsIndex = hitsIndex;
     }
 
-    public boolean isCurrentlyMoving() {
-        return currentlyMoving;
-    }
-
     public boolean isInCollision() {
         return inCollision;
     }
@@ -105,68 +86,28 @@ public abstract class Sprite extends Tile {
         this.inCollision = inCollision;
     }
 
+    /**
+     *
+     * @param direction Ne doit pas être null
+     * @param movementType Ne doit pas être null
+     */
     public void move(DirectionEnum direction, MovementTypeEnum movementType) {
+        System.out.println(direction + " " + movementType);
+
+        eraseVelocity();
+
         //On bloque toute commande si le sprite est dans une animation
         if (!status.isAnimated()) {
             spriteEvent.setDirection(direction);
             spriteEvent.setMovementType(movementType);
 
-            //Changement d'event
-            if (!previousSpriteEvent.equals(spriteEvent)) {
-                eventChanged = true;
-            } else {
-                eventChanged = false;
-            }
-            previousSpriteEvent.setDirection(spriteEvent.getDirection());
-            previousSpriteEvent.setMovementType(spriteEvent.getMovementType());
-
-            if (direction != null) {
-                //Cas demande direction
-                this.velocityX = 0;
-                this.velocityY = 0;
-                if (MovementTypeEnum.WALK.equals(movementType) || MovementTypeEnum.RUN.equals(movementType)) {
-                    status = SpriteStatusEnum.WALKING; //@TODO prévoir le cas RUN
-                    switch (direction) {
-                        case RIGHT:
-                            this.velocityX = VELOCITY;
-                            break;
-                        case LEFT:
-                            this.velocityX = -VELOCITY;
-                            break;
-                        case UP:
-                            this.velocityY = -VELOCITY;
-                            break;
-                        case DOWN:
-                            this.velocityY = VELOCITY;
-                            break;
-                        case UP_RIGHT:
-                            this.velocityY = -VELOCITY;
-                            this.velocityX = VELOCITY;
-                            break;
-                        case UP_LEFT:
-                            this.velocityY = -VELOCITY;
-                            this.velocityX = -VELOCITY;
-                            break;
-                        case DOWN_LEFT:
-                            this.velocityY = VELOCITY;
-                            this.velocityX = -VELOCITY;
-                            break;
-                        case DOWN_RIGHT:
-                            this.velocityY = VELOCITY;
-                            this.velocityX = VELOCITY;
-                            break;
-                    }
-                }
-            }
-            if (MovementTypeEnum.STOPED.equals(movementType) && velocityY == 0 && velocityX == 0) { //@TODO utile de tester la vélocité ?
-                currentlyMoving = false;
-                status = SpriteStatusEnum.STAND;
-            } else {
-                currentlyMoving = true;
+            //Cas demande direction
+            if (MovementTypeEnum.WALK.equals(movementType) || MovementTypeEnum.RUN.equals(movementType)) {
+                processWalk(direction);
             }
 
             if (MovementTypeEnum.ATTACK.equals(movementType)) {
-                status = SpriteStatusEnum.ATTACK;
+                processAttack();
             }
         }
     }
@@ -188,14 +129,6 @@ public abstract class Sprite extends Tile {
         return spriteEvent;
     }
 
-    public boolean isEventChanged() {
-        return eventChanged;
-    }
-
-    public void setEventChanged(boolean eventChanged) {
-        this.eventChanged = eventChanged;
-    }
-
     public SpriteStatusEnum getStatus() {
         return status;
     }
@@ -204,4 +137,46 @@ public abstract class Sprite extends Tile {
         this.status = status;
     }
 
+    private void processWalk(DirectionEnum direction) {
+        status = SpriteStatusEnum.WALKING; //@TODO prévoir le cas RUN
+        switch (direction) {
+            case RIGHT:
+                this.velocityX = VELOCITY;
+                break;
+            case LEFT:
+                this.velocityX = -VELOCITY;
+                break;
+            case UP:
+                this.velocityY = -VELOCITY;
+                break;
+            case DOWN:
+                this.velocityY = VELOCITY;
+                break;
+            case UP_RIGHT:
+                this.velocityY = -VELOCITY;
+                this.velocityX = VELOCITY;
+                break;
+            case UP_LEFT:
+                this.velocityY = -VELOCITY;
+                this.velocityX = -VELOCITY;
+                break;
+            case DOWN_LEFT:
+                this.velocityY = VELOCITY;
+                this.velocityX = -VELOCITY;
+                break;
+            case DOWN_RIGHT:
+                this.velocityY = VELOCITY;
+                this.velocityX = VELOCITY;
+                break;
+        }
+    }
+
+    private void processAttack() {
+        status = SpriteStatusEnum.ATTACK;
+    }
+
+    public void notifyEndAnimation() {
+        status = SpriteStatusEnum.STAND;
+        spriteEvent.setMovementType(MovementTypeEnum.STOPED);
+    }
 }
