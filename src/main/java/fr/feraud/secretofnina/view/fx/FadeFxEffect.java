@@ -34,7 +34,7 @@ public class FadeFxEffect implements IFxEffect {
             for (int x = 0; x < (int) image.getWidth(); x++) {
                 //Retrieving the color of the pixel of the loaded image
                 Color color = pixelReader.getColor(x, y);
-                Color ncolor = new Color(color.getRed(), color.getGreen(), color.getBlue(), Math.max(0, 1 - loopCounter / 10));
+                Color ncolor = new Color(color.getRed(), color.getGreen(), color.getBlue(), Math.max(0.0, 1.0 - (double) loopCounter / 10.0));
                 writer.setColor(x, y, ncolor);
             }
         }

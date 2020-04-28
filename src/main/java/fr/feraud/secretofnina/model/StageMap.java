@@ -15,6 +15,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.image.Image;
@@ -63,8 +64,15 @@ public class StageMap {
         height = datas.getHeight() * 16;
     }
 
+    /**
+     * Uniquement les ennemies vivants
+     *
+     * @return
+     */
     public List<Sprite> getEnnemies() {
-        return ennemies;
+        return ennemies.stream()
+                .filter(c -> !SpriteStatusEnum.DEAD.equals(c.getStatus()))
+                .collect(Collectors.toList());
     }
 
     public void setEnnemies(List<Sprite> ennemies) {

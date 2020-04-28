@@ -110,7 +110,7 @@ public abstract class DefaultSpriteRenderer implements IRenderer<Sprite, Canvas>
         //On applique les effet à l'image si il y en a
         Image image;
         if (fxEffect != null) {
-            image = fxEffect.applyEffect(originalImage, 0);//@TODO : passe le loop counter
+            image = fxEffect.applyEffect(originalImage, imageNumber);
         } else {
             image = originalImage;
         }

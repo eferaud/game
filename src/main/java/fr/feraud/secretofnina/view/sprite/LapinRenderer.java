@@ -37,6 +37,7 @@ public class LapinRenderer extends DefaultSpriteRenderer {
         CONFIG.put(MovementTypeEnum.RUN, new Segment(2, 2));
         CONFIG.put(MovementTypeEnum.ATTACK, new Segment(4, 4));
         CONFIG.put(MovementTypeEnum.HURT, new Segment(8, 2));
+        CONFIG.put(MovementTypeEnum.DIE, new Segment(1, 10)); //@TODO refaire mieux
     }
 
     public LapinRenderer() {

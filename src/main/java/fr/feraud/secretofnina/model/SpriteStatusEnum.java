@@ -15,7 +15,8 @@ public enum SpriteStatusEnum {
     WALKING(false),
     STAND(false),
     HURT(true),
-    DIYING(true);
+    DIYING(true),
+    DEAD(false);
 
     boolean animated;
 

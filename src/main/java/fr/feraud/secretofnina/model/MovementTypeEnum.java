@@ -15,5 +15,6 @@ public enum MovementTypeEnum {
     WALK,
     RUN,
     ATTACK,
-    HURT;
+    HURT,
+    DIE;
 }

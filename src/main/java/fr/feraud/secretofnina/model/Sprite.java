@@ -179,11 +179,16 @@ public abstract class Sprite extends Tile implements ICollisible {
      */
     public void notifyEndAnimation() {
 
-        status = prevStatus;
-        spriteEvent.setMovementType(prevSpriteEvent.getMovementType()); //@FIXME que si pas reçu le message stop
-        eraseCounter();
+        //Status final de mort
+        if (SpriteStatusEnum.DIYING.equals(status)) {
+            status = SpriteStatusEnum.DEAD;
+        } else {
+            status = prevStatus;
+            spriteEvent.setMovementType(prevSpriteEvent.getMovementType()); //@FIXME que si pas reçu le message stop
+            eraseCounter();
 
-        move(spriteEvent.getDirection(), spriteEvent.getMovementType());
+            move(spriteEvent.getDirection(), spriteEvent.getMovementType());
+        }
     }
 
     /**
@@ -197,6 +202,11 @@ public abstract class Sprite extends Tile implements ICollisible {
         //System.out.println(direction + " " + movementType);
 
         eraseVelocity();
+
+        //Il il est mort ou en train de mourir, on ne fait rien
+        if (SpriteStatusEnum.DEAD.equals(status) || SpriteStatusEnum.DIYING.equals(status)) {
+            return;
+        }
 
         //Cas d'une animation et relachement du pavé directionnel
         if (status.isAnimated() && MovementTypeEnum.STOPED.equals(movementType)) {
@@ -300,6 +310,7 @@ public abstract class Sprite extends Tile implements ICollisible {
         if (hitsIndex >= lifeIndex) {
             System.out.println("MORT");
             status = SpriteStatusEnum.DIYING;
+            spriteEvent.setMovementType(MovementTypeEnum.DIE);
         }
     }
 
