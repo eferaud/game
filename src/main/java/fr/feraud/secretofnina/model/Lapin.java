@@ -12,7 +12,7 @@ package fr.feraud.secretofnina.model;
 public class Lapin extends Sprite {
 
     private static final int WIDTH = 31;
-    private static final int HEIGHT = 30;
+    private static final int HEIGHT = 27;
     private static final int LIFE_POINT = 27;
 
     public Lapin(Integer x, Integer y) {

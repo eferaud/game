@@ -38,6 +38,7 @@ public class TotoRenderer extends DefaultSpriteRenderer {
         CONFIG.put(MovementTypeEnum.STOPED, new Segment(1, 1));
         CONFIG.put(MovementTypeEnum.WALK, new Segment(2, 6));
         CONFIG.put(MovementTypeEnum.ATTACK, new Segment(8, 3));
+        CONFIG.put(MovementTypeEnum.HURT, new Segment(1, 1));
     }
 
     public TotoRenderer() {
@@ -62,36 +63,9 @@ public class TotoRenderer extends DefaultSpriteRenderer {
         return new ArrayList<>(ImageUtils.getSubTilesFromTileset(tilesetImage, offsetX, offsetY, WIDTH, HEIGHT, nbrTilesX, 1).values());
     }
 
-    private static List<Image> reverse(List<Image> images) {
-        List<Image> reserveImages = new ArrayList<>();
-
-        images.forEach((image) -> {
-            reserveImages.add(ImageUtils.flipImage(image));
-        });
-
-        return reserveImages;
-    }
-
     @Override
-    public Map<SpriteEvent, List<Image>> getMAP() {
+    public Map<SpriteEvent, List<Image>> getAnimationFromEvent() {
         return MAP;
-    }
-
-    private int getOffsetY(DirectionEnum direction) {
-        switch (direction) {
-            case LEFT:
-            case DOWN_LEFT:
-            case UP_LEFT:
-            case RIGHT:
-            case UP_RIGHT:
-            case DOWN_RIGHT:
-                return 1;
-            case DOWN:
-                return 2;
-            case UP:
-                return 3;
-        }
-        return 0;
     }
 
 }

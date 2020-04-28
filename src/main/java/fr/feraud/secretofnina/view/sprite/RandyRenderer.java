@@ -35,6 +35,7 @@ public class RandyRenderer extends DefaultSpriteRenderer {
         CONFIG.put(MovementTypeEnum.STOPED, new Segment(1, 1));
         CONFIG.put(MovementTypeEnum.WALK, new Segment(2, 6));
         CONFIG.put(MovementTypeEnum.ATTACK, new Segment(8, 3));
+        CONFIG.put(MovementTypeEnum.HURT, new Segment(1, 1));
     }
 
     public RandyRenderer() {
@@ -42,7 +43,7 @@ public class RandyRenderer extends DefaultSpriteRenderer {
             for (DirectionEnum direction : DirectionEnum.values()) {
                 SpriteEvent spriteEvent = new SpriteEvent(direction, movementType);
                 List<Image> images = getImages(spriteEvent);
-                if (DIR2REVERSE.equals(direction)) {
+                if (direction.name().contains(DIR2REVERSE.name())) {
                     MAP.put(spriteEvent, reverse(images));
                 } else {
                     MAP.put(spriteEvent, images);
@@ -54,23 +55,13 @@ public class RandyRenderer extends DefaultSpriteRenderer {
     private List<Image> getImages(SpriteEvent spriteEvent) {
         Segment segment = CONFIG.get(spriteEvent.getMovementType());
         int offsetX = segment.getBegin() * WIDTH;
-        int offsetY = 0;
+        int offsetY = getOffsetY(spriteEvent.getDirection()) * HEIGHT;
         int nbrTilesX = segment.getLength();
         return new ArrayList<>(ImageUtils.getSubTilesFromTileset(tilesetImage, offsetX, offsetY, WIDTH, HEIGHT, nbrTilesX, 1).values());
     }
 
-    private static List<Image> reverse(List<Image> images) {
-        List<Image> reserveImages = new ArrayList<>();
-
-        images.forEach((image) -> {
-            reserveImages.add(ImageUtils.flipImage(image));
-        });
-
-        return reserveImages;
-    }
-
     @Override
-    public Map<SpriteEvent, List<Image>> getMAP() {
+    public Map<SpriteEvent, List<Image>> getAnimationFromEvent() {
         return MAP;
     }
 }

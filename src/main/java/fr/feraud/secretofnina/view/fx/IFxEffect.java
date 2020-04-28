@@ -3,17 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package fr.feraud.secretofnina.model;
+package fr.feraud.secretofnina.view.fx;
+
+import javafx.scene.image.Image;
 
 /**
  *
  * @author eric
  */
-public enum MovementTypeEnum {
+public interface IFxEffect {
 
-    STOPED,
-    WALK,
-    RUN,
-    ATTACK,
-    HURT;
+    Image applyEffect(Image image, int loopCounter);
+
 }

@@ -23,8 +23,14 @@ public abstract class Sprite extends Tile implements ICollisible {
     //Nbr de point de vie au max
     private int lifeIndex;
 
-    //Nbr de point de dégat pris
+    //Nbr de point de dégat pris au total
     private int hitsIndex;
+
+    //Nbr de dégat donné lors du dernier coup
+    private int givenHit;
+
+    //Nbr de dégat reçu lors du dernier coup
+    private int receivedHit;
 
     private final SpriteEvent spriteEvent = new SpriteEvent(DirectionEnum.DOWN, MovementTypeEnum.STOPED);
     private final SpriteEvent prevSpriteEvent = new SpriteEvent(DirectionEnum.DOWN, MovementTypeEnum.STOPED);
@@ -44,6 +50,7 @@ public abstract class Sprite extends Tile implements ICollisible {
         this.velocityX = 0;
         this.velocityY = 0;
         this.hitsIndex = 0;
+        this.lifeIndex = lifeIndex;
     }
 
     public int getLifeIndex() {
@@ -175,7 +182,6 @@ public abstract class Sprite extends Tile implements ICollisible {
         status = prevStatus;
         spriteEvent.setMovementType(prevSpriteEvent.getMovementType()); //@FIXME que si pas reçu le message stop
         eraseCounter();
-        System.out.println("notifyEndAnimation status->" + status + " MovementType->" + spriteEvent.getMovementType());
 
         move(spriteEvent.getDirection(), spriteEvent.getMovementType());
     }
@@ -185,9 +191,10 @@ public abstract class Sprite extends Tile implements ICollisible {
      *
      * @param direction Si null, on garde l'ancienne direction
      * @param movementType Si null on garde l'ancien mouvement
+     * @param params Le nombre de point d'une attaque par exemple
      */
-    public void move(DirectionEnum direction, MovementTypeEnum movementType) {
-        System.out.println(direction + " " + movementType);
+    public void move(DirectionEnum direction, MovementTypeEnum movementType, int... params) {
+        //System.out.println(direction + " " + movementType);
 
         eraseVelocity();
 
@@ -220,6 +227,9 @@ public abstract class Sprite extends Tile implements ICollisible {
 
             if (MovementTypeEnum.ATTACK.equals(movementType)) {
                 processAttack();
+            }
+            if (MovementTypeEnum.HURT.equals(movementType)) {
+                processHurt(params[0]);
             }
         }
     }
@@ -259,10 +269,38 @@ public abstract class Sprite extends Tile implements ICollisible {
         }
     }
 
+    public int getGivenHit() {
+        return givenHit;
+    }
+
+    public int getReceivedHit() {
+        return receivedHit;
+    }
+
     private void processAttack() {
         prevStatus = status;
         eraseCounter();
         status = SpriteStatusEnum.ATTACK;
+        givenHit = 20; //@TODO gestion degat
+    }
+
+    /**
+     * Uniquement le moteur de collision
+     *
+     * @param nbrPoint
+     */
+    private void processHurt(int newHit) {
+        prevStatus = status;
+        eraseCounter();
+        status = SpriteStatusEnum.HURT;
+        hitsIndex = hitsIndex + newHit;
+        receivedHit = newHit;
+        System.out.println("HURT!! (" + lifeIndex + "/" + hitsIndex + ")");
+
+        if (hitsIndex >= lifeIndex) {
+            System.out.println("MORT");
+            status = SpriteStatusEnum.DIYING;
+        }
     }
 
 }

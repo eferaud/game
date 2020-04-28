@@ -11,8 +11,12 @@ import fr.feraud.secretofnina.model.GameCamera;
 import fr.feraud.secretofnina.model.Lapin;
 import fr.feraud.secretofnina.model.Randy;
 import fr.feraud.secretofnina.model.Sprite;
+import fr.feraud.secretofnina.model.SpriteStatusEnum;
 import fr.feraud.secretofnina.model.StageMap;
 import fr.feraud.secretofnina.model.Toto;
+import fr.feraud.secretofnina.utils.TextUtils;
+import fr.feraud.secretofnina.view.fx.FadeFxEffect;
+import fr.feraud.secretofnina.view.fx.IFxEffect;
 import fr.feraud.secretofnina.view.map.DefaultMapRenderer;
 import fr.feraud.secretofnina.view.sprite.LapinRenderer;
 import fr.feraud.secretofnina.view.sprite.RandyRenderer;
@@ -44,6 +48,7 @@ public class GameRenderEngine {
 
     private final Canvas spriteLayer;
     private final Canvas mapLayer;
+    private final Canvas fxLayer;
 
     private GameCamera gameCamera;
 
@@ -72,9 +77,11 @@ public class GameRenderEngine {
         this.mapLayer = (Canvas) RENDERERS.get(map.getClass()).initLayer(map, gameCamera, root, applicationParameters.getWidth(), applicationParameters.getHeight());
         //Init layer des sprites
         this.spriteLayer = (Canvas) RENDERERS.get(map.getPlayer().getClass()).initLayer(map.getPlayer(), gameCamera, root, applicationParameters.getWidth(), applicationParameters.getHeight());
-
         root.setFocusTraversable(true);
         root.requestFocus();
+
+        this.fxLayer = new Canvas(applicationParameters.getWidth(), applicationParameters.getHeight());
+        root.getChildren().add(fxLayer);
 
     }
 
@@ -85,33 +92,42 @@ public class GameRenderEngine {
     public synchronized void render(double time) {
         GraphicsContext spitesContext = spriteLayer.getGraphicsContext2D();
         GraphicsContext mapContext = mapLayer.getGraphicsContext2D();
+        GraphicsContext fxContext = this.fxLayer.getGraphicsContext2D();
 
         //Réinit du layer des sprites
         spitesContext.clearRect(gameCamera.getOffsetX(), gameCamera.getOffsetY(), gameCamera.getWidth(), gameCamera.getHeight());
+
+        //Réinit du layer fx
+        fxContext.clearRect(gameCamera.getOffsetX(), gameCamera.getOffsetY(), gameCamera.getWidth(), gameCamera.getHeight());
 
         //Réinit du layer de la map
         mapContext.clearRect(gameCamera.getOffsetX(), gameCamera.getOffsetY(), gameCamera.getWidth(), gameCamera.getHeight());
 
         //Render de la map
-        render(this.map, time);
+        render(this.map, time, null);
 
         //Render des ennemis
         this.map.getEnnemies().forEach((player) -> {
-            render(player, time);
+            if (SpriteStatusEnum.DIYING.equals(player.getStatus())) {
+                processDeath(player, time); //@TODO à revoir, le render ne doit pas etre fait dedans pour la lisibilité du code
+            } else {
+                render(player, time, null);
+                processHurt(player, fxContext);
+            }
         });
         //Render du joueur
-        render(this.map.getPlayer(), time);
+        render(this.map.getPlayer(), time, null);
+        processHurt(this.map.getPlayer(), fxContext);
 
         processScrolling();
-
     }
 
-    private void render(Sprite element, double time) {
-        RENDERERS.get(element.getClass()).render(element, this.spriteLayer);
+    private void render(Sprite element, double time, IFxEffect fxEffect) {
+        RENDERERS.get(element.getClass()).render(element, this.spriteLayer, fxEffect);
     }
 
-    private void render(StageMap map, double time) {
-        RENDERERS.get(map.getClass()).render(map, this.mapLayer);
+    private void render(StageMap map, double time, IFxEffect fxEffect) {
+        RENDERERS.get(map.getClass()).render(map, this.mapLayer, fxEffect);
     }
 
     public void attachHandler(PlayerEventHandler playerEventHandler) {
@@ -134,6 +150,7 @@ public class GameRenderEngine {
     private void processScrolling() {
         GraphicsContext spitesContext = spriteLayer.getGraphicsContext2D();
         GraphicsContext mapContext = mapLayer.getGraphicsContext2D();
+        GraphicsContext fxContext = this.fxLayer.getGraphicsContext2D();
 
         boolean canScrollLeft = gameCamera.getOffsetX() >= 0;
         boolean canScrollRight = (gameCamera.getOffsetX() + gameCamera.getWidth()) <= map.getWidth();
@@ -146,6 +163,7 @@ public class GameRenderEngine {
         if (canScrollRight && this.map.getPlayer().getMapPositionX() > (gameCamera.getOffsetX() + gameCamera.getWidth() * (1d - GameCamera.SCROLL_TRIGGER_THRESHOLD))) {
             spitesContext.translate(-3, 0);
             mapContext.translate(-3, 0);
+            fxContext.translate(-3, 0);
             gameCamera.translateX(3);
         }
 
@@ -154,6 +172,7 @@ public class GameRenderEngine {
         if (canScrollLeft && this.map.getPlayer().getMapPositionX() < (gameCamera.getOffsetX() + gameCamera.getWidth() * GameCamera.SCROLL_TRIGGER_THRESHOLD)) {
             spitesContext.translate(3, 0);
             mapContext.translate(3, 0);
+            fxContext.translate(3, 0);
             gameCamera.translateX(-3);
         }
 
@@ -161,6 +180,7 @@ public class GameRenderEngine {
         if (canScrollDown && this.map.getPlayer().getMapPositionY() > (gameCamera.getOffsetY() + gameCamera.getHeight() * (1d - GameCamera.SCROLL_TRIGGER_THRESHOLD))) {
             spitesContext.translate(0, -3);
             mapContext.translate(0, -3);
+            fxContext.translate(0, -3);
             gameCamera.translateY(3);
         }
 
@@ -168,9 +188,21 @@ public class GameRenderEngine {
         if (canScrollUp && this.map.getPlayer().getMapPositionY() < (gameCamera.getOffsetY() + gameCamera.getHeight() * GameCamera.SCROLL_TRIGGER_THRESHOLD)) {
             spitesContext.translate(0, 3);
             mapContext.translate(0, 3);
+            fxContext.translate(0, 3);
             gameCamera.translateY(-3);
         }
 
+    }
+
+    private void processHurt(Sprite player, GraphicsContext fxContext) {
+        if (SpriteStatusEnum.HURT.equals(player.getStatus())) {
+            TextUtils.shadowText(fxContext, String.valueOf(player.getReceivedHit()), player.getMapPositionX(), player.getMapPositionY() + player.getHeight());
+        }
+    }
+
+    private void processDeath(Sprite player, double time) {
+        IFxEffect fxEffect = new FadeFxEffect(); //@TODO systeme de MAP pour stocker les différents effets
+        render(player, time, fxEffect);
     }
 
 }

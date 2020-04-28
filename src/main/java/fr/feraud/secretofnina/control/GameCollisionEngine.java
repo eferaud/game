@@ -6,9 +6,12 @@
 package fr.feraud.secretofnina.control;
 
 import fr.feraud.secretofnina.model.GameCamera;
+import fr.feraud.secretofnina.model.MovementTypeEnum;
 import fr.feraud.secretofnina.model.Sprite;
+import fr.feraud.secretofnina.model.SpriteStatusEnum;
 import fr.feraud.secretofnina.model.StageMap;
 import fr.feraud.secretofnina.model.Tile;
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -42,10 +45,19 @@ public class GameCollisionEngine implements IGameCollisionEngine {
     private void processCollision(Sprite player, double time) {
         player.update(time);
 
-        if (isCollisions(player, time)) {
-            player.setInCollision(true);
-            player.rollback(time);
-            player.eraseVelocity();
+        CollisionResult collisionResult = getCollisions(player, time);
+        if (collisionResult.isCollision()) {
+            if (SpriteStatusEnum.ATTACK.equals(player.getStatus()) && collisionResult.isSpriteCollision()) {
+                List<Sprite> hurtSprites = collisionResult.getSpritesInCollision();
+                for (Sprite hurtSprite : hurtSprites) {
+                    hurtSprite.move(hurtSprite.getSpriteEvent().getDirection(), MovementTypeEnum.HURT, player.getGivenHit());
+                }
+            } else {
+                player.setInCollision(true);
+                player.rollback(time);
+                player.eraseVelocity();
+            }
+
         } else {
             player.setInCollision(false);
         }
@@ -57,11 +69,12 @@ public class GameCollisionEngine implements IGameCollisionEngine {
      * @param player
      * @param time
      */
-    private boolean isCollisions(Sprite player, double time) {
+    private CollisionResult getCollisions(Sprite player, double time) {
+        CollisionResult result = new CollisionResult();
         for (Sprite other : map.getEnnemies()) {
             if (player != other) { //pas de self collision
                 if (broadCollision(player, other) && narrowSpriteCollision(player, other)) {
-                    return true;
+                    result.add(other);
                 }
             }
         }
@@ -70,9 +83,9 @@ public class GameCollisionEngine implements IGameCollisionEngine {
             if (tile.isPlain()) {
                 if (broadCollision(player, tile)) { //cas d'une collision large
                     if (!tile.isTransparency()) { //Si non transparent, pas la peine de tester plus fin
-                        return true;
+                        result.add(tile);
                     } else if (narrowTileCollision(player, tile)) { //Si transparent et collision étroite
-                        return true;
+                        result.add(tile);
                     }
                 }
             }
@@ -80,10 +93,10 @@ public class GameCollisionEngine implements IGameCollisionEngine {
 
         //check depassement de la map
         if (!gameCamera.getBoundary().contains(player.getBoundary())) {
-            return true;
+            result.setOutSideMapCollision(true);
         }
 
-        return false;
+        return result;
     }
 
     //Collision étroite

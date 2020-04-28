@@ -5,11 +5,14 @@
  */
 package fr.feraud.secretofnina.view.sprite;
 
+import fr.feraud.secretofnina.model.DirectionEnum;
 import fr.feraud.secretofnina.model.GameCamera;
 import fr.feraud.secretofnina.model.Sprite;
 import fr.feraud.secretofnina.model.SpriteEvent;
 import fr.feraud.secretofnina.utils.ImageUtils;
 import fr.feraud.secretofnina.view.IRenderer;
+import fr.feraud.secretofnina.view.fx.IFxEffect;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -36,8 +39,8 @@ public abstract class DefaultSpriteRenderer implements IRenderer<Sprite, Canvas>
     }
 
     @Override
-    public void render(Sprite player, Canvas layer) {
-        int nbrImage = getMAP().get(player.getSpriteEvent()).size();
+    public void render(Sprite player, Canvas layer, IFxEffect fxEffect) {
+        int nbrImage = getAnimationFromEvent().get(player.getSpriteEvent()).size();
 
         if (player.getLoopCounter() >= (FRAME_RATE * nbrImage)) {
             player.eraseCounter();
@@ -51,7 +54,8 @@ public abstract class DefaultSpriteRenderer implements IRenderer<Sprite, Canvas>
 
         int imageNumber = player.getLoopCounter() / FRAME_RATE;
 
-        Image image = getMAP().get(player.getSpriteEvent()).get(imageNumber % nbrImage);
+        Image image = getImage(player.getSpriteEvent(), imageNumber, nbrImage, fxEffect);
+
         internalRender(player, layer, image);
 
         player.setClipping(ImageUtils.getClipping(image, player.getMapPositionX(), player.getMapPositionY(), false));
@@ -74,5 +78,46 @@ public abstract class DefaultSpriteRenderer implements IRenderer<Sprite, Canvas>
         layer.getGraphicsContext2D().drawImage(image, 0, 0, player.getWidth(), player.getHeight(), dx, dy, dw, dh);
     }
 
-    public abstract Map<SpriteEvent, List<Image>> getMAP();
+    protected int getOffsetY(DirectionEnum direction) {
+        switch (direction) {
+            case LEFT:
+            case DOWN_LEFT:
+            case UP_LEFT:
+            case RIGHT:
+            case UP_RIGHT:
+            case DOWN_RIGHT:
+                return 1;
+            case DOWN:
+                return 2;
+            case UP:
+                return 3;
+        }
+        return 0;
+    }
+
+    protected static List<Image> reverse(List<Image> images) {
+        List<Image> reserveImages = new ArrayList<>();
+
+        images.forEach((image) -> {
+            reserveImages.add(ImageUtils.flipImage(image));
+        });
+
+        return reserveImages;
+    }
+
+    private Image getImage(SpriteEvent spriteEvent, int imageNumber, int maxImage, IFxEffect fxEffect) {
+        Image originalImage = getAnimationFromEvent().get(spriteEvent).get(imageNumber % maxImage);
+        //On applique les effet à l'image si il y en a
+        Image image;
+        if (fxEffect != null) {
+            image = fxEffect.applyEffect(originalImage, 0);//@TODO : passe le loop counter
+        } else {
+            image = originalImage;
+        }
+
+        return image;
+    }
+
+    public abstract Map<SpriteEvent, List<Image>> getAnimationFromEvent();
+
 }

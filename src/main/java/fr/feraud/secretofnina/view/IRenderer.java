@@ -6,6 +6,7 @@
 package fr.feraud.secretofnina.view;
 
 import fr.feraud.secretofnina.model.GameCamera;
+import fr.feraud.secretofnina.view.fx.IFxEffect;
 import javafx.scene.Node;
 import javafx.scene.layout.Pane;
 
@@ -17,7 +18,13 @@ import javafx.scene.layout.Pane;
  */
 public interface IRenderer<T, L extends Node> {
 
-    public void render(T element, L layer);
+    /**
+     *
+     * @param element L'élement à afficher
+     * @param layer La couche dans laquelle dessiner l'élément
+     * @param fxEffect Effet FX à appliquer (peut être null)
+     */
+    public void render(T element, L layer, IFxEffect fxEffect);
 
     public L initLayer(T element, GameCamera gameCamera, Pane parent, int width, int height);
 
